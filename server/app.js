@@ -1,7 +1,12 @@
 
-/**
- * Module dependencies.
- */
+/**********************
+* OWL - The Smart Light
+* FISHTNK DESIGN
+* DEVELOPED BY RELAY STUDIO
+*
+* See documentation at
+* http://github.com/relaystudio/fishtnk-owl
+***********************/
 
 var configPath = '../config.js';
 
@@ -12,11 +17,17 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require('../configLoad.js')
+  , serial = require('serialport')
   , gpio = require('gpio');
     
 var mode = 0; // Setup mode
 
 var app = module.exports = express.createServer();
+
+var SerialPort = serial.SerialPort;
+var serialPort = new SerialPort("/dev/ttyACM0", {
+  parser: serialport.parsers.readline('\n')
+});
 
 // Configuration
 
@@ -38,6 +49,7 @@ app.configure('production', function(){
 });
 
 // Rpi functions
+// FOR GPIO
 var _open = function(pin, fn) { return gpio.export(pin, {ready: fn}); };
 
 var _close = function(pin, fn) {
@@ -48,12 +60,29 @@ var _close = function(pin, fn) {
   }
 };
 
+// FOR SERIAL
+var light = function(lum, temp) {
+  serial.write("l"+lum);
+  serial.write("t"+temp);
+
+  // This should _really_ update on 
+  // response from the arduino that
+  // serial wrote successfully.
+  updateLampConfig(lum,temp);
+};
+
+
 var checkMode = function() {
   return config.setupMode;
 };
 
 
 // Routes
+serialPort.on('data', function (data) {
+  sys.puts("owl: " + data);
+  if(data)
+});
+
 
 app.get('/', function(req, res){
 
@@ -115,6 +144,26 @@ console.log("Changing wlan: " + conf);
 
 });
 
+app.post('/light/:lum?/:temp?', function(req,res) {
+  if(req.params.lum == '') {
+    lum = config.lamp.lum;
+  } else {
+    lum = req.params.lum;
+  }
+
+  if(req.params.temp == '') {
+    lum = config.lamp.temp;
+  } else {
+    lum = req.params.temp;
+  }
+
+  light(req.lum, req.temp);
+}); 
+
+app.get('/light', function(req,res) {
+
+});
+
 var reset = function() {
   var configFile = fs.readFileSync('../config_default.js');
   var content = JSON.parse(configFile);
@@ -124,7 +173,19 @@ var reset = function() {
       console.log(err.message);
       return;
     }
+}
 
+var updateLampConfig = function(lum,temp) {
+  var configFile = fs.readFileSync('../config.js');
+  var content = JSON.parse(cconfigFile);
+  content.lamp.lum = lum;
+  content.lamp.temp = temp;
+  fs.writeFile(configPath, JSON.stringify(content), function(err) {
+  if (err) {
+    console.log('There has been an error saving config data.');
+    console.log(err.message);
+    return;
+  }
 }
 
 app.listen(3000);
