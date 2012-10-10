@@ -1,6 +1,11 @@
-var config = {
-	"uuid":"1"
-	, "setupMode"	: true // true for setup mode, false for active
+{
+	"uuid":0
+	, "setupMode"	: true
+	, "network": {
+		"ssid": ""
+		, "pass": ""
+		, "type": ""
+	}
 	, "owner": {
 		"owner":""
 		, "email":""
@@ -11,5 +16,3 @@ var config = {
 		, "lum" 	: 1.0
 	}
 }
-
-module.exports = config;

@@ -2,12 +2,13 @@ $(document).ready( function(){
 
 	$.getJSON('/ssid', function(data) {
   		var items = [];
-
 		$.each(data, function(key, val) {
-    		items.push('<li id="' + key + '">' + val + '</li>');
+			if(val !== '') {
+    		items.push('<option>' + val + '</option>');
+    		}
   		});
-
-		$('.ssid').append(items);
+		console.log("data:" + data)
+		$('.ssid').html(items.toString());
 	});
 
 
@@ -21,7 +22,7 @@ $(document).ready( function(){
 	
 function submit() {
 	var message = {};
-	message.user = $('.user').val();
+	message.owner = $('.user').val();
 	message.email = $('.email').val();
 	message.ssid = $('.ssid').val();
 	message.pass= $('.pass').val();

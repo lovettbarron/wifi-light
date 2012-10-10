@@ -92,9 +92,9 @@ console.log("Changing wlan: " + conf);
 
   var configFile = fs.readFileSync(configPath);
   var content = JSON.parse(configFile);
-  content.network.ssid = "testing"
+  content.network.ssid = req.body.ssid;
   content.network.pass = req.body.pass;
-  content.owner.owner = req.body.user;
+  content.owner.owner = req.body.owner;
   content.owner.email = req.body.email;
   content.owner.first = new Date();
 
@@ -114,6 +114,18 @@ console.log("Changing wlan: " + conf);
   })
 
 });
+
+var reset = function() {
+  var configFile = fs.readFileSync('../config_default.js');
+  var content = JSON.parse(configFile);
+    fs.writeFile(configPath, JSON.stringify(content), function(err) {
+    if (err) {
+      console.log('There has been an error saving your configuration data.');
+      console.log(err.message);
+      return;
+    }
+
+}
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.settings.port, app.settings.env);
