@@ -63,13 +63,18 @@ app.get('/', function(req, res){
 app.get('/ssid', function(req,res) {
   var ssid;
   exec('iwlist wlan0 scanning | grep ESSID'
-    ,  function (error, stdout, stderr) {
-      if(error) console.log("Err: " + error + stderr);
-      ssid = stdout.toString().match('/"[^"]+"/');
+  , function (error, stdout, stderr) {
+    if(error) console.log("Err: " + error + stderr);
+    ssid = stdout.toString();//.match('/"[^"]+"/');
+    var ssidArr = ssid.split("                    ESSID:").length;
+    for(int i=1;i<ssidArr.length;i++) {
+      ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
+    }
+    
   });
   
-  console.log(ssid);
-
+  console.log(ssidArr);
+  res.send(ssidArr);
 })
 
 app.listen(3000);
