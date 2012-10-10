@@ -3,13 +3,15 @@
  * Module dependencies.
  */
 
+var configPath = '../config.js';
+
 var express = require('express')
   , util = require('util')
   , url = require('url')
   , fs = require('fs')
   , sys = require('sys')
   , exec = require('child_process').exec
-  , config = require('../config.js')
+  , config = require('../configLoad.js')
   , gpio = require('gpio');
     
 var mode = 0; // Setup mode
@@ -78,8 +80,40 @@ app.get('/ssid', function(req,res) {
   });
   
   console.log(ssidArr);
+  //TEST
+  ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
+
   res.send(ssidArr);
-})
+});
+
+app.post('/ssid', function(req,res) {
+var conf = {}
+console.log("Changing wlan: " + conf);
+
+  var configFile = fs.readFileSync(configPath);
+  var content = JSON.parse(configFile);
+  content.network.ssid = "testing"
+  content.network.pass = req.body.pass;
+  content.owner.owner = req.body.user;
+  content.owner.email = req.body.email;
+  content.owner.first = new Date();
+
+  console.log(content)
+
+  fs.writeFile(configPath, JSON.stringify(content), function(err) {
+    if (err) {
+      console.log('There has been an error saving your configuration data.');
+      console.log(err.message);
+      return;
+    }
+    console.log('Configuration saved successfully.')
+    // If successful, 
+    // call script that changes /etc/network/interfaces
+    // and returns some successful result
+
+  })
+
+});
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.settings.port, app.settings.env);
