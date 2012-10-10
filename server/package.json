@@ -1,0 +1,13 @@
+{
+	"name": "fishtnk-owl"
+	, "author":"Relay Studio"
+	, "client":"Fishtnk Design"
+	, "version": "0.0.1"
+	, "private": true
+	, "dependencies": {
+	  	"node":"0.8.11"
+		, "express": "2.4.7"
+		, "jade" : ">= 0.0.1"
+		, "gpio" : ">= 0.0.1"
+	}
+}
