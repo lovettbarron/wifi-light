@@ -65,7 +65,7 @@ app.get('/ssid', function(req,res) {
   exec('iwlist wlan0 scanning | grep ESSID'
     ,  function (error, stdout, stderr) {
       if(error) console.log("Err: " + error + stderr);
-      ssid = stdout.toString().match("/\"[^\"]+\"/");
+      ssid = stdout.toString().match('/"[^"]+"/');
   });
   
   console.log(ssid);
