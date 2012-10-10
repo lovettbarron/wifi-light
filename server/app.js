@@ -68,7 +68,7 @@ app.get('/ssid', function(req,res) {
     if(error) console.log("Err: " + error + stderr);
     ssid = stdout.toString();//.match('/"[^"]+"/');
     console.log(ssid);
-    ssidArr = ssid.split("                    ESSID:").length;
+    ssidArr = ssid.split("                    ESSID:");
     console.log('ssidArr:' + ssidArr);
     for(i=1;i<ssidArr.length;i++) {
       ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
