@@ -16,7 +16,7 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require('../configLoad.js')
-  , serialport = require("serialport")
+  , serialport = require('serialport')
   , gpio = require('gpio');
     
 var mode = 0; // Setup mode
@@ -27,7 +27,8 @@ var app = module.exports = express();
 var SerialPort = serialport.SerialPort; // localize object constructor
 
 //var serial = new SerialPort("/dev/ttyACM0");
-var serialPort = new SerialPort("/dev/tty.usbmodem621");
+//var serialPort = new SerialPort("/dev/tty.usbmodem621");
+var serialPort = new SerialPort("/dev/ttyACM0");
 
 // Configuration
 
