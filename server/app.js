@@ -17,17 +17,18 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require('../configLoad.js')
-  , serial = require('serialport')
+  , serialport = require("serialport")
   , gpio = require('gpio');
     
 var mode = 0; // Setup mode
 
-var app = module.exports = express.createServer();
+//var app = module.exports = express.createServer();
+var app = module.exports = express();
 
-var SerialPort = serial.SerialPort;
-var serialPort = new SerialPort("/dev/ttyACM0", {
-  parser: serialport.parsers.readline('\n')
-});
+var SerialPort = serialport.SerialPort; // localize object constructor
+
+//var serial = new SerialPort("/dev/ttyACM0");
+var serialPort = new SerialPort("/dev/tty.usbmodem621");
 
 // Configuration
 
@@ -62,13 +63,15 @@ var _close = function(pin, fn) {
 
 // FOR SERIAL
 var light = function(lum, temp) {
-  serial.write("l"+lum);
-  serial.write("t"+temp);
+  if(lum >= 0)
+    serialPort.write("l"+lum);
+  if(temp >= 0)
+    serialPort.write("t"+temp);
 
   // This should _really_ update on 
   // response from the arduino that
   // serial wrote successfully.
-  updateLampConfig(lum,temp);
+  //updateLampConfig(lum,temp);
 };
 
 
@@ -80,7 +83,7 @@ var checkMode = function() {
 // Routes
 serialPort.on('data', function (data) {
   sys.puts("owl: " + data);
-  if(data)
+  //if(data)
 });
 
 
@@ -116,8 +119,8 @@ app.get('/ssid', function(req,res) {
 });
 
 app.post('/ssid', function(req,res) {
-var conf = {}
-console.log("Changing wlan: " + conf);
+  var conf = {}
+  console.log("Changing wlan: " + conf);
 
   var configFile = fs.readFileSync(configPath);
   var content = JSON.parse(configFile);
@@ -160,6 +163,16 @@ app.post('/light/:lum?/:temp?', function(req,res) {
   light(req.lum, req.temp);
 }); 
 
+app.get('/temp/:temp', function(req,res) {
+  light(-1, req.params.temp);
+  console.log("Setting temp " + req.params.temp);
+});
+
+app.get('/lum/:lum', function(req,res) {
+  light(req.params.lum, -1);
+  console.log("Setting lum " + req.params.lum);
+});
+
 app.get('/light', function(req,res) {
 
 });
@@ -172,21 +185,23 @@ var reset = function() {
       console.log('There has been an error saving your configuration data.');
       console.log(err.message);
       return;
-    }
-}
+      }
+    });
+  };
 
 var updateLampConfig = function(lum,temp) {
   var configFile = fs.readFileSync('../config.js');
-  var content = JSON.parse(cconfigFile);
+  var content = JSON.parse(configFile);
   content.lamp.lum = lum;
   content.lamp.temp = temp;
   fs.writeFile(configPath, JSON.stringify(content), function(err) {
-  if (err) {
-    console.log('There has been an error saving config data.');
-    console.log(err.message);
-    return;
-  }
-}
+    if (err) {
+      console.log('There has been an error saving config data.');
+      console.log(err.message);
+      return;
+      }
+  });
+};
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.settings.port, app.settings.env);
