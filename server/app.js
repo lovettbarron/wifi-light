@@ -113,7 +113,7 @@ app.get('/ssid', function(req,res) {
   
   console.log(ssidArr);
   //TEST
-  ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
+  //ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
 
   res.send(ssidArr);
 });
