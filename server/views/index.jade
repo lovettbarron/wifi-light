@@ -3,9 +3,14 @@ block body
 	.container
 		h1 The Owl
 		p Thank you for buying an owl!
-
+		.extraInfo.pullRight.well
+			form.form
+				h3 Register your owl for premius service and upgrades!
+				input.text.pass(type='text',placeholder='Name')
+				input.text.pass(type='text',placeholder='Email')
+		
 		form.form
 			select.dropdown.ssid(type='dropdown',placeholder='Your ssid')
 				option Proto ssid
-			input.text.pass(type='text',placeholder='wireless password')
+			input.text.pass(type='password',placeholder='wireless password')
 			a.btn.submit Save and restart Owl

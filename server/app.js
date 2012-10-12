@@ -106,7 +106,7 @@ app.get('/ssid', function(req,res) {
     ssidArr = ssid.split("                    ESSID:");
     console.log('ssidArr:' + ssidArr);
     for(i=1;i<ssidArr.length;i++) {
-      ssidArr[i-1] = JSON.stringify(ssidArr[i].match('\"(.*?)\"')[1]);
+      ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
       console.log("ID " + i-1 + ":" + ssidArr[i-1]);
     }
     res.send(ssidArr);
