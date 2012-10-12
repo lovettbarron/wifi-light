@@ -21,14 +21,14 @@ $(document).ready( function(){
 	$('a.lumOn').click( function(e){
 			e.preventDefault();
 			$.getJSON('/lum/255', function(data) {
-				break;
+				console.log(data);
 			});
 	});
 
 	$('a.tempOn').click( function(e){
 			e.preventDefault();
 			$.getJSON('/temp/255', function(data) {
-				break;
+				console.log(data);
 			});
 	});
 

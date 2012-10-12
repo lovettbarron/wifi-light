@@ -168,11 +168,13 @@ app.post('/light/:lum?/:temp?', function(req,res) {
 app.get('/temp/:temp', function(req,res) {
   light(-1, req.params.temp);
   console.log("Setting temp " + req.params.temp);
+  res.send('Done temp ' + req.params.temp);
 });
 
 app.get('/lum/:lum', function(req,res) {
   light(req.params.lum, -1);
   console.log("Setting lum " + req.params.lum);
+  res.send('Done lum ' + req.params.lum);
 });
 
 app.get('/light', function(req,res) {
