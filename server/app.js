@@ -97,6 +97,7 @@ app.get('/', function(req, res){
 app.get('/ssid', function(req,res) {
   var ssid = ''
   , ssidArr = [];
+
   exec('iwlist wlan0 scanning | grep ESSID'
   , function (error, stdout, stderr) {
     if(error) console.log("Err: " + error + stderr);
@@ -106,12 +107,12 @@ app.get('/ssid', function(req,res) {
     console.log('ssidArr:' + ssidArr);
     for(i=1;i<ssidArr.length;i++) {
       ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
-      console.log(ssidArr[i-1])
+      console.log("ID: " + ssidArr[i-1]);
     }
     
   });
   
-  console.log(ssidArr);
+  console.log(JSON.stringify(ssidArr));
   //TEST
   //ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
 
