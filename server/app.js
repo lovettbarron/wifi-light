@@ -1,8 +1,7 @@
-
 /**********************
 * OWL - The Smart Light
-* FISHTNK DESIGN
-* DEVELOPED BY RELAY STUDIO
+* Fishtnk Design
+* IxD and Code by Relay Studio
 *
 * See documentation at
 * http://github.com/relaystudio/fishtnk-owl
