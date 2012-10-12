@@ -95,8 +95,8 @@ app.get('/', function(req, res){
 });
 
 app.get('/ssid', function(req,res) {
-  var ssid = ''
-  , ssidArr = [];
+  var ssid = '';
+  var ssidArr = [];
 
   exec('iwlist wlan0 scanning | grep ESSID'
   , function (error, stdout, stderr) {
@@ -107,16 +107,16 @@ app.get('/ssid', function(req,res) {
     console.log('ssidArr:' + ssidArr);
     for(i=1;i<ssidArr.length;i++) {
       ssidArr[i-1] = JSON.stringify(ssidArr[i].match('\"(.*?)\"')[1]);
-      console.log("ID: " + ssidArr[i-1]);
+      console.log("ID " + i-1 + ":" + ssidArr[i-1]);
     }
-    
+    res.send(ssidArr);
   });
   
   console.log(JSON.stringify(ssidArr));
   //TEST
   //ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
 
-  res.send(ssidArr);
+
 });
 
 app.post('/ssid', function(req,res) {
