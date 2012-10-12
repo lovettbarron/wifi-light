@@ -109,6 +109,7 @@ app.get('/ssid', function(req,res) {
       ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
       console.log("ID " + i-1 + ":" + ssidArr[i-1]);
     }
+    ssidArr.pop();
     res.send(ssidArr);
   });
   

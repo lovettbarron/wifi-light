@@ -6,3 +6,9 @@ body {
 a {
   color: #00B7FF;
 }
+
+.extraInfo {
+	float: right;
+	clear: right;
+	width: 300px;
+}
