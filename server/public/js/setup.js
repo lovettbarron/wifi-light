@@ -18,6 +18,20 @@ $(document).ready( function(){
 			submit();
 	});
 
+	$('a.lumOn').click( function(e){
+			e.preventDefault();
+			$.getJSON('/lum/255', function(data) {
+
+			});
+	});
+
+	$('a.tempOn').click( function(e){
+			e.preventDefault();
+			$.getJSON('/temp/255', function(data) {
+
+			});
+	});
+
 });
 	
 function submit() {
