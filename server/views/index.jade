@@ -1,21 +1,23 @@
 extends layout
-block body
+
+block index
 	.container
-		h1 The Owl
-		p Thank you for buying an owl!
-		.extraInfo.pullRight.well
+		#xypad
+			#lens
+		#drawer.well
+			h2 Settings
 			form.form
 				h3 Register your owl for premius service and upgrades!
 				input.text.pass(type='text',placeholder='Name')
 				input.text.pass(type='text',placeholder='Email')
+				a.btn Register
 
-		.extraInfo.pullRight.well
-			h3 TEST
-			a.btn.lumOn lum
-			a.btn.tempOn temp
+			h3 Connect owl to wireless network
+			form.form
+				select.dropdown.ssid(type='dropdown',placeholder='Your ssid')
+					option Proto ssid
+				input.text.pass(type='password',placeholder='wireless password')
+				a.btn.submit Save and restart Owl
+			.clearfix
+				a.btn.pull-right.drawer Close
 
-		form.form
-			select.dropdown.ssid(type='dropdown',placeholder='Your ssid')
-				option Proto ssid
-			input.text.pass(type='password',placeholder='wireless password')
-			a.btn.submit Save and restart Owl

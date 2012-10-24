@@ -1,4 +1,55 @@
+var drawer = false;
+var active = false;
+
 $(document).ready( function(){
+	$('.dropdown-toggle').dropdown()
+	openDrawer(false);
+
+
+	$('#xypad').mousemove( function(e) {
+		var string;
+		var buffer = 60;
+		if( e.pageY > buffer)
+			var lum = Math.floor(255 * ( ( e.pageY-buffer)/ $(window).innerHeight()));
+		else var lum = 0;
+		var temp =  Math.floor(255 * ( e.pageX / $(window).innerWidth()));
+
+
+		string = (lum * temp / 100) + 'watts/hour'
+
+		if(lum < 0) {
+			lum = 0;
+			ative = false
+		} else {
+			active = true;
+		}
+
+		$.getJSON('/temp/' + temp, function(data) {
+					console.log(data);
+				});
+
+
+		$.getJSON('/lum/' + lum, function(data) {
+					console.log(data);
+				});
+
+
+
+		$(this).css({
+			'background-color' : getColorTemp(temp)
+		});
+
+		if(e.pageY > buffer + 60) {
+			$('#lens').css( {
+				'left' : e.pageX-50
+				, 'top' : e.pageY-buffer*2
+			}).html(string);
+		}
+
+
+	});
+
+
 
 	$.getJSON('/ssid', function(data) {
   		var items = [];
@@ -11,6 +62,12 @@ $(document).ready( function(){
 		$('.ssid').html(items.toString());
 	});
 
+
+	$('a.drawer').click( function(e) {
+		if(drawer == true) drawer = false;
+		else drawer = true;
+		openDrawer(drawer);
+	})
 
 	//Request account
 	$('a.submit').click( function(e){
@@ -34,6 +91,27 @@ $(document).ready( function(){
 
 });
 	
+function openDrawer(open) {
+	if( open == true ) {
+		$('#drawer').slideDown()
+	} else {
+		$('#drawer').slideUp();
+	}
+}
+
+
+function getColorTemp(temp) {
+	var color;
+	if(temp < 127) {
+		color = 'rgba(50,150,' + Math.floor( 255- (250 * (temp / 255))) + ',1.)';
+	} else {
+		color = 'rgba(' + Math.floor(200 * (temp / 255) ) + ',150,' + Math.floor(250 * (temp / 255)) + ', 1.)';
+	}
+	console.log(color)
+	return color;
+}
+
+
 function submit() {
 	var message = {};
 	message.owner = $('.user').val();

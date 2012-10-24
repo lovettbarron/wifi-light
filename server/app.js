@@ -177,9 +177,6 @@ app.get('/lum/:lum', function(req,res) {
   res.send('Done lum ' + req.params.lum);
 });
 
-app.get('/light', function(req,res) {
-
-});
 
 var reset = function() {
   var configFile = fs.readFileSync('../config_default.js');
