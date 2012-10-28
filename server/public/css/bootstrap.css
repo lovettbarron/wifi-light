@@ -1133,7 +1133,7 @@ table .headerSortUp:after {
   opacity: 0.6;
 }
 i {
-  background-image: url(docs/assets/img/glyphicons-halflings-sprite.png);
+  background-image: url(/img/glyphicons-halflings.png);
   background-position: 0 0;
   background-repeat: no-repeat;
   display: inline-block;

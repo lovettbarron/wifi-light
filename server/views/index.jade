@@ -1,23 +1,43 @@
 extends layout
 
 block index
-	.container
+	.container-fluid
 		#xypad
 			#lens
-		#drawer.well
-			h2 Settings
-			form.form
-				h3 Register your owl for premius service and upgrades!
-				input.text.pass(type='text',placeholder='Name')
-				input.text.pass(type='text',placeholder='Email')
-				a.btn Register
+		#drawer
+			ul#settings.nav.tabs.nav-tabs(data-tabs="tabs")
+				li.active
+					a(href='#intro',data-toggle="tab") Intro
+				li
+					a(href='#register',data-toggle="tab") Register
+				li
+					a(href='#wireless',data-toggle="tab") Network
 
-			h3 Connect owl to wireless network
-			form.form
-				select.dropdown.ssid(type='dropdown',placeholder='Your ssid')
-					option Proto ssid
-				input.text.pass(type='password',placeholder='wireless password')
-				a.btn.submit Save and restart Owl
-			.clearfix
-				a.btn.pull-right.drawer Close
+			.tab-content
+				.well.tab-pane.active#intro
+					h3 The Owl
+					ul
+						li Placeholder for info
+						li Placeholder for info
 
+				.well.tab-pane#register
+					h3 Settings
+					form.form
+						h3 Register your owl for premius service and upgrades!
+						input.text.pass(type='text',placeholder='Name')
+						input.text.pass(type='text',placeholder='Email')
+						a.btn.drawer Register
+
+				.well.tab-pane#wireless
+					h3 Connect owl to wireless network
+					form.form
+						select.dropdown.ssid(type='dropdown',placeholder='Your ssid')
+							option Proto ssid
+						input.text.pass(type='password',placeholder='wireless password')
+						a.btn.submit Save and restart Owl
+					.clearfix
+						a.btn.pull-right.drawer Close
+	.nav.nav-bar.fixed-bottom
+		.navbar-inner
+			ul.navbar
+				a Test

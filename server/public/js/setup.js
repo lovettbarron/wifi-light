@@ -2,15 +2,18 @@ var drawer = false;
 var active = false;
 
 $(document).ready( function(){
-	$('.dropdown-toggle').dropdown()
+	$('.dropdown-toggle').dropdown();
+	$('.collapse-toggle').collapse();
+	$('#settings').tab('show');
+
 	openDrawer(false);
 
 
 	$('#xypad').mousemove( function(e) {
 		var string;
-		var buffer = 60;
-		if( e.pageY > buffer)
-			var lum = Math.floor(255 * ( ( e.pageY-buffer)/ $(window).innerHeight()));
+		var buffer = 40;
+		if( e.pageY >= buffer)
+			var lum = Math.floor(255 * ( ( e.pageY)/ $(window).innerHeight()));
 		else var lum = 0;
 		var temp =  Math.floor(255 * ( e.pageX / $(window).innerWidth()));
 
@@ -36,10 +39,10 @@ $(document).ready( function(){
 
 
 		$(this).css({
-			'background-color' : getColorTemp(temp)
+			'background-color' : getColor(temp,lum/255)
 		});
 
-		if(e.pageY > buffer + 60) {
+		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
 				, 'top' : e.pageY-buffer*2
@@ -100,12 +103,15 @@ function openDrawer(open) {
 }
 
 
-function getColorTemp(temp) {
+function getColor(temp, lum) {
 	var color;
+	if( lum <= 0. ) {
+		color = 'rgba(0,0,0,1.)';	
+	} else
 	if(temp < 127) {
-		color = 'rgba(50,150,' + Math.floor( 255- (250 * (temp / 255))) + ',1.)';
+		color = 'rgba(50,255,' + Math.floor( 255- (250 * (temp / 255))) + ',' + (1-lum) + ')';
 	} else {
-		color = 'rgba(' + Math.floor(200 * (temp / 255) ) + ',150,' + Math.floor(250 * (temp / 255)) + ', 1.)';
+		color = 'rgba(' + Math.floor(200 * (temp / 255) ) + ',255,' + Math.floor(250 * (temp / 255)) + ',' + (1-lum) + ')';
 	}
 	console.log(color)
 	return color;
