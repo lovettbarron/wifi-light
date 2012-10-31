@@ -45,7 +45,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
       board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-    },10)
+    },100)
 });
 
 
