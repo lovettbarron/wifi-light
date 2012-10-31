@@ -29,6 +29,28 @@ var lumPin = 6
 var lum = 255
   , temp = 127;
 
+// for Firmata
+var board = new Board('/dev/ttyACM0', function(err) {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+    console.log('connected');
+    }
+
+    board.pinMode(lumPin, board.MODES.PWM);
+    board.pinMode(temPin, board.MODES.PWM);
+    board.pinMode(testPin, board.MODES.PWM)
+
+    setInterval(function(){
+      console.log("Setting lum" + lum + "and temp" + temp);
+      board.analogWrite(lumPin, lum);
+      board.analogWrite(temPin, temp);
+      board.analogWrite(testPin, (new Date().getMilliseconds)%255);
+    },60)
+});
+
+
 //var app = module.exports = express.createServer();
 var app = module.exports = express();
 
@@ -59,27 +81,6 @@ app.configure('production', function(){
 
 // Rpi functions
 
-
-// for Firmata
-var board = new Board('/dev/ttyACM0', function(err) {
-    if (err) {
-      console.log(err);
-      return;
-    } else {
-    console.log('connected');
-    }
-
-    board.pinMode(lumPin, board.MODES.PWM);
-    board.pinMode(temPin, board.MODES.PWM);
-    board.pinMode(testPin, board.MODES.PWM)
-
-    setInterval(function(){
-      console.log("Setting lum" + lum + "and temp" + temp);
-      board.analogWrite(lumPin, lum);
-      board.analogWrite(temPin, temp);
-      board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-    },60)
-});
 
 
 // FOR GPIO
