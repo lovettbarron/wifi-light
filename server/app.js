@@ -65,13 +65,16 @@ var board = new Board('/dev/ttyACM0', function(err) {
     if (err) {
       console.log(err);
       return;
-    }
+    } else {
     console.log('connected');
+    }
 
     board.pinMode(lumPin, board.MODES.PWM);
     board.pinMode(temPin, board.MODES.PWM);
     board.pinMode(testPin, board.MODES.PWM)
+
     setInterval(function(){
+      console.log("Setting lum" + lum + "and temp" + temp);
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
       board.analogWrite(testPin, (new Date().getMilliseconds)%255);
