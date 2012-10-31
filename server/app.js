@@ -31,8 +31,8 @@ var lum = 255
   , alarm = 7;
 
 // for Firmata
-var board = new Board('/dev/tty.usbmodem411', function() {
-//var board = new Board('/dev/ttyACM0', function(err) {
+//var board = new Board('/dev/tty.usbmodem411', function() {
+var board = new Board('/dev/ttyACM0', function(err) {
     console.log('connected');
     
 
