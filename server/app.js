@@ -16,9 +16,9 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require('../configLoad.js')
-  , serialport = require('serialport')
-  , firmata = require('firmata').Board
-  , gpio = require('gpio');
+  //, serialport = require('serialport')
+  , Board = require('firmata').Board;
+  //, gpio = require('gpio');
     
 var mode = 0; // Setup mode
 
