@@ -109,10 +109,10 @@ var checkMode = function() {
 
 
 // Routes
-serialPort.on('data', function (data) {
-  sys.puts("owl: " + data);
-  //if(data)
-});
+// serialPort.on('data', function (data) {
+//   sys.puts("owl: " + data);
+//   //if(data)
+// });
 
 
 app.get('/', function(req, res){
