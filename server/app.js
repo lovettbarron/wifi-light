@@ -26,6 +26,9 @@ var lumPin = 6
   , temPin = 5
   , testPin = 13;
 
+var lum = 255
+  , temp = 127;
+
 //var app = module.exports = express.createServer();
 var app = module.exports = express();
 
@@ -68,7 +71,10 @@ var board = new firmata.Board('/dev/ttyACM0', function(err) {
     board.pinMode(lumPin, board.MODES.PWM);
     board.pinMode(temPin, board.MODES.PWM);
     board.pinMode(testPin, board.MODES.PWM)
-
+    setInterval(function(){
+      board.analogWrite(lumPin, lum);
+      board.analogWrite(temPin, temp);
+    },60)
 }).board;
 
 
@@ -193,7 +199,6 @@ app.post('/light/:lum?/:temp?', function(req,res) {
 }); 
 
 app.get('/temp/:temp', function(req,res) {
-    var lum, temp;
 
   if(req.params.temp == '') {
     temp = Math.floor(config.lamp.temp);
@@ -201,20 +206,19 @@ app.get('/temp/:temp', function(req,res) {
     temp = Math.floor(req.params.temp);
   }
 
-  light(-1, req.params.temp);
+ // light(-1, req.params.temp);
   console.log("Setting temp " + req.params.temp);
   res.send('Done temp ' + req.params.temp);
 });
 
 app.get('/lum/:lum', function(req,res) {
-  var lum;
   if(req.params.lum == '') {
     lum = Math.floor(config.lamp.lum);
   } else {
     lum = Math.floor(req.params.lum);
   }
 
-  light(lum, -1);
+ // light(lum, -1);
   console.log("Setting lum " + req.params.lum);
   res.send('Done lum ' + req.params.lum);
 });
