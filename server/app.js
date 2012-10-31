@@ -29,11 +29,11 @@ var lumPin = 6
 //var app = module.exports = express.createServer();
 var app = module.exports = express();
 
-var SerialPort = serialport.SerialPort; // localize object constructor
+//var SerialPort = serialport.SerialPort; // localize object constructor
 
 //var serial = new SerialPort("/dev/ttyACM0");
 //var serialPort = new SerialPort("/dev/tty.usbmodem621");
-var serialPort = new SerialPort("/dev/ttyACM0");
+//var serialPort = new SerialPort("/dev/ttyACM0");
 
 // Configuration
 
@@ -219,6 +219,10 @@ app.get('/lum/:lum', function(req,res) {
   res.send('Done lum ' + req.params.lum);
 });
 
+
+///////////////////////
+// Server setup modes//
+///////////////////////
 
 var broadcastMode = function() {
   var configFile = fs.readFileSync('../config.js');
