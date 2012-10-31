@@ -27,16 +27,14 @@ var lumPin = 6
   , testPin = 13;
 
 var lum = 255
-  , temp = 127;
+  , temp = 127
+  , alarm = 7;
 
 // for Firmata
-var board = new Board('/dev/ttyACM0', function(err) {
-    if (err) {
-      console.log(err);
-      return;
-    } else {
+var board = new Board('/dev/tty.usbmodem411', function() {
+//var board = new Board('/dev/ttyACM0', function(err) {
     console.log('connected');
-    }
+    
 
     board.pinMode(lumPin, board.MODES.PWM);
     board.pinMode(temPin, board.MODES.PWM);
@@ -47,7 +45,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
       board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-    },60)
+    },10)
 });
 
 
@@ -226,6 +224,24 @@ app.get('/lum/:lum', function(req,res) {
  // light(lum, -1);
   console.log("Setting lum " + req.params.lum);
   res.send('Done lum ' + req.params.lum);
+});
+
+app.get('/alarm/:time', function(req,res) {
+  var configFile = fs.readFileSync('../config.js');
+  var content = JSON.parse(configFile);
+  alarm = req.params.time;
+  console.log("Setting lum " + req.params.lum);
+  res.send('Done lum ' + req.params.lum);
+  
+  content.alarm.time = alarm;
+
+  fs.writeFile(configPath, JSON.stringify(content), function(err) {
+    if (err) {
+      console.log('There has been an error saving config data.');
+      console.log(err.message);
+      return;
+      }
+  });
 });
 
 

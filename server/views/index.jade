@@ -19,6 +19,12 @@ block index
 					ul
 						li Placeholder for info
 						li Placeholder for info
+					form.dropdown.alarmClock
+						select
+							- for (var i=1;i<24;++i) {
+								option= i
+							-}
+					a.btn.setAlarm Set Alarm
 
 				.well.tab-pane#register
 					h3 Settings

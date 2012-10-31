@@ -8,6 +8,14 @@ $(document).ready( function(){
 
 	openDrawer(false);
 
+	$('a.setAlarm').click( function(e) {
+		e.preventDefault;
+		var alarmTime = $('.alarmClock').val();
+		$.getJSON('/alarm/' + alarmTime, function(data) {
+			console.log(data);
+		});
+	})
+
 
 	$('#xypad').mousemove( function(e) {
 		var string;
