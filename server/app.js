@@ -74,6 +74,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
     setInterval(function(){
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
+      board.analogWrite(testPin, (new Date().getMilliseconds)%255);
     },60)
 });
 
