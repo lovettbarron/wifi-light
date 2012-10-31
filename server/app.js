@@ -176,6 +176,7 @@ app.post('/ssid', function(req,res) {
 });
 
 app.post('/light/:lum?/:temp?', function(req,res) {
+  var lum, temp;
   if(req.params.lum == '') {
     lum = config.lamp.lum;
   } else {
@@ -183,22 +184,37 @@ app.post('/light/:lum?/:temp?', function(req,res) {
   }
 
   if(req.params.temp == '') {
-    lum = config.lamp.temp;
+    temp = config.lamp.temp;
   } else {
-    lum = req.params.temp;
+    temp = req.params.temp;
   }
 
-  light(req.lum, req.temp);
+  light(lum, temp);
 }); 
 
 app.get('/temp/:temp', function(req,res) {
+    var lum, temp;
+
+  if(req.params.temp == '') {
+    temp = int(config.lamp.temp);
+  } else {
+    temp = int(req.params.temp);
+  }
+
   light(-1, req.params.temp);
   console.log("Setting temp " + req.params.temp);
   res.send('Done temp ' + req.params.temp);
 });
 
 app.get('/lum/:lum', function(req,res) {
-  light(req.params.lum, -1);
+  var lum;
+  if(req.params.lum == '') {
+    lum = int(config.lamp.lum);
+  } else {
+    lum = int(req.params.lum);
+  }
+
+  light(lum, -1);
   console.log("Setting lum " + req.params.lum);
   res.send('Done lum ' + req.params.lum);
 });
