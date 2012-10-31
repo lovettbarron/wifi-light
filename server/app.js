@@ -58,7 +58,7 @@ app.configure('production', function(){
 
 
 // for Firmata
-var board = new firmata.Board('/dev/tty.usbmodemfd121', function(err) {
+var board = new firmata.Board('/dev/ttyACM0', function(err) {
     if (err) {
       console.log(err);
       return;
