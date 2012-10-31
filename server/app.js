@@ -17,9 +17,14 @@ var express = require('express')
   , exec = require('child_process').exec
   , config = require('../configLoad.js')
   , serialport = require('serialport')
+  , firmata = require('firmata')
   , gpio = require('gpio');
     
 var mode = 0; // Setup mode
+
+var lumPin = 6
+  , temPin = 5
+  , testPin = 13;
 
 //var app = module.exports = express.createServer();
 var app = module.exports = express();
@@ -50,6 +55,23 @@ app.configure('production', function(){
 });
 
 // Rpi functions
+
+
+// for Firmata
+var board = new firmata.Board('/dev/tty.usbmodemfd121', function(err) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log('connected');
+
+    board.pinMode(lumPin, board.MODES.PWM);
+    board.pinMode(temPin, board.MODES.PWM);
+    board.pinMode(testPin, board.MODES.PWM)
+
+});
+
+
 // FOR GPIO
 var _open = function(pin, fn) { return gpio.export(pin, {ready: fn}); };
 
@@ -63,17 +85,23 @@ var _close = function(pin, fn) {
 
 // FOR SERIAL
 var light = function(lum, temp) {
+  // if(lum >= 0)
+  //   serialPort.write("l"+lum);
+  // if(temp >= 0)
+  //   serialPort.write("t"+temp);
+
+
   if(lum >= 0)
-    serialPort.write("l"+lum);
+    board.analogWrite(lumPin, lum);
   if(temp >= 0)
-    serialPort.write("t"+temp);
+    board.analogWrite(temPin, temp);
+
 
   // This should _really_ update on 
   // response from the arduino that
   // serial wrote successfully.
   //updateLampConfig(lum,temp);
 };
-
 
 var checkMode = function() {
   return config.setupMode;
@@ -116,8 +144,6 @@ app.get('/ssid', function(req,res) {
   console.log(JSON.stringify(ssidArr));
   //TEST
   //ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
-
-
 });
 
 app.post('/ssid', function(req,res) {
@@ -176,6 +202,19 @@ app.get('/lum/:lum', function(req,res) {
   console.log("Setting lum " + req.params.lum);
   res.send('Done lum ' + req.params.lum);
 });
+
+
+var broadcastMode = function() {
+  var configFile = fs.readFileSync('../config.js');
+  var content = JSON.parse(configFile);
+  
+}
+
+var joinMode = function() {
+  var configFile = fs.readFileSync('../config.js');
+  var content = JSON.parse(configFile);
+  
+}
 
 
 var reset = function() {
