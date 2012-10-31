@@ -61,7 +61,7 @@ app.configure('production', function(){
 
 
 // for Firmata
-var board = new firmata.Board('/dev/ttyACM0', function(err) {
+var board = new Board('/dev/ttyACM0', function(err) {
     if (err) {
       console.log(err);
       return;
@@ -75,7 +75,7 @@ var board = new firmata.Board('/dev/ttyACM0', function(err) {
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
     },60)
-}).board;
+});
 
 
 // FOR GPIO
