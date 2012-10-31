@@ -69,7 +69,7 @@ var board = new firmata.Board('/dev/ttyACM0', function(err) {
     board.pinMode(temPin, board.MODES.PWM);
     board.pinMode(testPin, board.MODES.PWM)
 
-});
+}).board;
 
 
 // FOR GPIO
