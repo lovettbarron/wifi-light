@@ -196,9 +196,9 @@ app.get('/temp/:temp', function(req,res) {
     var lum, temp;
 
   if(req.params.temp == '') {
-    temp = int(config.lamp.temp);
+    temp = Math.floor(config.lamp.temp);
   } else {
-    temp = int(req.params.temp);
+    temp = Math.floor(req.params.temp);
   }
 
   light(-1, req.params.temp);
@@ -209,9 +209,9 @@ app.get('/temp/:temp', function(req,res) {
 app.get('/lum/:lum', function(req,res) {
   var lum;
   if(req.params.lum == '') {
-    lum = int(config.lamp.lum);
+    lum = Math.floor(config.lamp.lum);
   } else {
-    lum = int(req.params.lum);
+    lum = Math.floor(req.params.lum);
   }
 
   light(lum, -1);
