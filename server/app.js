@@ -30,24 +30,10 @@ var lum = 255
   , temp = 127
   , alarm = 7;
 
+var alarmOn = false;
+
 // for Firmata
 //var board = new Board('/dev/tty.usbmodem411', function() {
-var board = new Board('/dev/ttyACM0', function(err) {
-    console.log('connected');
-    
-
-    board.pinMode(lumPin, board.MODES.PWM);
-    board.pinMode(temPin, board.MODES.PWM);
-    board.pinMode(testPin, board.MODES.PWM)
-
-    setInterval(function(){
-      console.log("Setting lum" + lum + "and temp" + temp);
-      board.analogWrite(lumPin, lum);
-      board.analogWrite(temPin, temp);
-      //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-    },100)
-});
-
 
 //var app = module.exports = express.createServer();
 var app = module.exports = express();
@@ -131,6 +117,13 @@ app.get('/', function(req, res){
   });
 });
 
+app.get('/status', function(req,res) {
+  var configFile = fs.readFileSync(configPath);
+  var content = JSON.parse(configFile);
+
+  res.send(content);
+});
+
 app.get('/ssid', function(req,res) {
   var ssid = '';
   var ssidArr = [];
@@ -197,8 +190,6 @@ app.post('/light/:lum?/:temp?', function(req,res) {
   } else {
     temp = req.params.temp;
   }
-
-  light(lum, temp);
 }); 
 
 app.get('/temp/:temp', function(req,res) {
@@ -234,6 +225,7 @@ app.get('/alarm/:time', function(req,res) {
   res.send('Done lum ' + req.params.lum);
   
   content.alarm.time = alarm;
+  content.alarm.on = alarmOn;
 
   fs.writeFile(configPath, JSON.stringify(content), function(err) {
     if (err) {
@@ -244,6 +236,10 @@ app.get('/alarm/:time', function(req,res) {
   });
 });
 
+app.post('/config/:type?/:ssid?/:pass?', function(req,res) {
+  changeNetwork('adhoc');
+}); 
+
 
 ///////////////////////
 // Server setup modes//
@@ -252,13 +248,63 @@ app.get('/alarm/:time', function(req,res) {
 var broadcastMode = function() {
   var configFile = fs.readFileSync('../config.js');
   var content = JSON.parse(configFile);
-  
+  changeNetwork("adhoc"); 
 }
 
 var joinMode = function() {
   var configFile = fs.readFileSync('../config.js');
   var content = JSON.parse(configFile);
+  changeNetwork(content.network.type, content.network.ssid, content.network.pass); 
+}
+
+var changeNetwork = function(type,ssid,pass) {
+  var network = fs.readFileSync('../interfaces.txt');
+  var current, output;
+  switch(type) {
+    case 'wpa':
+      break;
+    case 'wep':
+      break;
+    case 'adhoc': //adhoc
+
+      // First get the wireless up
+      exec('ifconfig wlan0 up'
+        , function (error, stdout, stderr) {
+          if(error) console.log("Err: " + error + stderr);
+          output = stdout.toString();
+          console.log(output);
+        });
+
+      // Setup the wireless network into adhoc mode
+      exec('iwconfig wlan0 mode ad-hoc'
+        , function (error, stdout, stderr) {
+          if(error) console.log("Err: " + error + stderr);
+          output = stdout.toString();
+          console.log(ssid);
+        });
+
+      // Setup the wireless network to adhoc mode
+      exec('iwconfig wlan0 essid "owl"'
+        , function (error, stdout, stderr) {
+          if(error) console.log("Err: " + error + stderr);
+          output = stdout.toString();
+          console.log(ssid);
+        });
+
+      // Set a static IP
+      exec('sudo ifconfig wlan0 inet 172.0.0.1'
+        , function (error, stdout, stderr) {
+          if(error) console.log("Err: " + error + stderr);
+          output = stdout.toString();
+          console.log(ssid);
+        });
+
+      break;
+    default:
+      break;
+  }
   
+  return;
 }
 
 
@@ -287,6 +333,32 @@ var updateLampConfig = function(lum,temp) {
       }
   });
 };
+
+
+//////////////////////////
+// Arduino firmata loop//
+////////////////////////
+var board = new Board('/dev/ttyACM0', function(err) {
+    console.log('connected');
+    
+
+    board.pinMode(lumPin, board.MODES.PWM);
+    board.pinMode(temPin, board.MODES.PWM);
+    board.pinMode(testPin, board.MODES.PWM)
+
+    setInterval(function(){
+      console.log("Setting lum" + lum + "and temp" + temp);
+      board.analogWrite(lumPin, lum);
+      board.analogWrite(temPin, temp);
+      //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
+      if(alarmOn) {
+        if( new Date().getHours() == alarm) {
+          triggerAlarm();
+        }
+      }
+    },100)
+});
+
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.settings.port, app.settings.env);

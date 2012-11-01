@@ -22,7 +22,7 @@ block index
 					form.dropdown.alarmClock
 						select
 							- for (var i=1;i<24;++i) {
-								option= i
+								option#alarm{i}= i
 							-}
 					a.btn.setAlarm Set Alarm
 

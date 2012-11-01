@@ -1,10 +1,21 @@
 var drawer = false;
 var active = false;
 
+var status = {};
+
 $(document).ready( function(){
 	$('.dropdown-toggle').dropdown();
 	$('.collapse-toggle').collapse();
 	$('#settings').tab('show');
+
+
+	$.getJSON('/status', function(data) {
+		console.log(data);
+		status = data;
+		$('.alarmClock').find('.active').removeClass('active');
+		$('#alarm' + data.alarm.time ).addClass('active')
+		$('.alarmTime').html( data.alarm.time + ":00" );
+		});
 
 	openDrawer(false);
 
