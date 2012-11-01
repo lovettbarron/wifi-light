@@ -1,5 +1,5 @@
 {
-	"uuid":0
+	"uuid": 0
 	, "setupMode"	: true
 	, "network": {
 		"ssid": ""
@@ -14,5 +14,8 @@
 	, "lamp": {
 		"temp"	: 1.0
 		, "lum" : 1.0
+	}
+	, "alarm": {
+		"time": 7
 	}
 }

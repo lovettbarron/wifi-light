@@ -22,8 +22,8 @@ var express = require('express')
     
 var mode = 0; // Setup mode
 
-var lumPin = 6
-  , temPin = 5
+var lumPin = 12
+  , temPin = 11
   , testPin = 13;
 
 var lum = 255
@@ -44,7 +44,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
       console.log("Setting lum" + lum + "and temp" + temp);
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
-      board.analogWrite(testPin, (new Date().getMilliseconds)%255);
+      //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
     },100)
 });
 
