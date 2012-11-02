@@ -17,7 +17,7 @@ $(document).ready( function(){
 		$('.alarmClock').find('.active').removeClass('active');
 		$('.alarmClock select').val(data.alarm.time);
 
-		jQuery.each(status.preset, function() {
+		$.each(status.preset, function() {
 			$('.presets').append('<li>' + this.name + "</li>");
 		})
 
@@ -25,23 +25,28 @@ $(document).ready( function(){
 			$('.alarmTime').html( "Wakeup at " + data.alarm.time + ":00" );
 
 
+		if(status.setupMode)
+			openDrawer(true);
+
 		$('#xypad').css({
 			'background-color' : getColor(status.lamp.temp,status.lamp.lum/255)
 		});
 
-		var string = (lum * temp / 100) + 'watts/hour';
+		var string = (lum * temp / 100);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
 				, 'top' : e.pageY-buffer*2
 				, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
-			}).html(string);
+			});//.html(string);
+		$('.energy').html(string + " watts per hour")
 		}
 
 
 	});
-
-	openDrawer(false);
+	
+		openDrawer(false);
+	
 
 	$('a.setAlarm').click( function(e) {
 		e.preventDefault;
@@ -78,13 +83,14 @@ $(document).ready( function(){
 			'background-color' : getColor(temp,lum/255)
 		});
 
-		var string = (lum * temp / 100) + 'watts/hour';
+		var string = (lum * temp / 100);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
 				, 'top' : e.pageY-buffer*2
 				, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
-			}).html(string);
+			})
+			$('.energy').html(string + " watts per hour")
 		}
 
 	});
@@ -101,6 +107,18 @@ $(document).ready( function(){
 		console.log("data:" + data)
 		$('.ssid').html(items.toString());
 	});
+
+	$.getJSON('/ssid', function(data) {
+		var items = [];
+		$.each(data, function(key, val) {
+			if(val !== '') {
+			items.push('<option>' + val + '</option>');
+			}
+			});
+		console.log("data:" + data)
+		$('.ssid').html(items.toString());
+	});
+
 
 
 	$('a.drawer').click( function(e) {
@@ -141,11 +159,11 @@ function openDrawer(open) {
 
 
 function changeColor(temp, lum) {
+
+
 		$.getJSON('/temp/' + temp, function(data) {
 				console.log(data);
 			});
-
-
 		$.getJSON('/lum/' + lum, function(data) {
 					console.log(data);
 				});
@@ -162,7 +180,7 @@ function getColor(temp, lum) {
 	} else {
 		color = 'rgba(' + Math.floor(200 * (temp / 255) ) + ',0,' + Math.floor(250 * (temp / 255)) + ',' + (1-lum) + ')';
 	}
-	console.log(color)
+	//console.log(color)
 	return color;
 }
 

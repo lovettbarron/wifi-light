@@ -22,8 +22,8 @@ var express = require('express')
     
 var mode = 0; // Setup mode
 
-var lumPin = 12
-  , temPin = 11
+var lumPin = 11
+  , temPin = 10
   , testPin = 13;
 
 var lum = 255
@@ -33,16 +33,7 @@ var lum = 255
 var alarmOn = false;
 
 // for Firmata
-//var board = new Board('/dev/tty.usbmodem411', function() {
-
-//var app = module.exports = express.createServer();
 var app = module.exports = express();
-
-//var SerialPort = serialport.SerialPort; // localize object constructor
-
-//var serial = new SerialPort("/dev/ttyACM0");
-//var serialPort = new SerialPort("/dev/tty.usbmodem621");
-//var serialPort = new SerialPort("/dev/ttyACM0");
 
 // Configuration
 
@@ -70,6 +61,13 @@ app.configure('production', function(){
 app.get('/', function(req, res){
 
   res.render('index', {
+    title: 'Fishtnk Setup'
+  });
+});
+
+app.get('/new', function(req, res){
+
+  res.render('setup', {
     title: 'Fishtnk Setup'
   });
 });
@@ -145,7 +143,7 @@ app.get('/temp/:temp', function(req,res) {
   } else {
     temp = Math.floor(req.params.temp);
   }
-      updateLampConfig(lum,temp);
+      
  // light(-1, req.params.temp);
   console.log("Setting temp " + req.params.temp);
   res.send('Done temp ' + req.params.temp);
@@ -157,7 +155,6 @@ app.get('/lum/:lum', function(req,res) {
   } else {
     lum = Math.floor(req.params.lum);
   }
-    updateLampConfig(lum,temp);
  // light(lum, -1);
   console.log("Setting lum " + req.params.lum);
   res.send('Done lum ' + req.params.lum);
@@ -295,13 +292,8 @@ var updateLampConfig = function(lum,temp) {
   var content = JSON.parse(configFile);
   content.lamp.lum = lum;
   content.lamp.temp = temp;
-  fs.writeFile(configPath, JSON.stringify(content), function(err) {
-    if (err) {
-      console.log('There has been an error saving config data.');
-      console.log(err.message);
-      return;
-      }
-  });
+  fs.writeFileSync(configPath, JSON.stringify(content));
+  
 };
 var light = function(lum, temp) {
 
@@ -319,30 +311,35 @@ var checkMode = function() {
 //////////////////////////
 // Arduino firmata loop//
 ////////////////////////
-var board = new Board('/dev/ttyACM0', function(err) {
+var board = new Board('/dev/tty.usbmodem411', function() { // This is for OSX testing
+//var board = new Board('/dev/ttyACM0', function(err) {
     console.log('connected ' + JSON.stringify(board));
     
 
     board.pinMode(lumPin, board.MODES.PWM);
     board.pinMode(temPin, board.MODES.PWM);
     board.pinMode(testPin, board.MODES.PWM)
-    
+
     console.trace("Setting board modes");
-    // setInterval(function(){
-    //   //console.log("Setting lum" + lum + "and temp" + temp);
-    //   board.analogWrite(lumPin, lum);
-    //   board.analogWrite(temPin, temp);
-    //   //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-    //   if(alarmOn) {
-    //     if( new Date().getHours() == alarm) {
-    //           if(alarmOn){
-    //           lum += 10;
-    //           temp += 10;
-    //           alarmOn = false;
-    //           }
-    //     }
-    //   }
-    // },1000);
+     setInterval(function(){
+       //console.log("Setting lum" + lum + "and temp" + temp);
+       board.analogWrite(lumPin, lum);
+       if(lum==0)
+         board.analogWrite(temPin, lum);
+       else board.analogWrite(temPin, temp);
+       //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
+       if(alarmOn) {
+         if( new Date().getHours() == alarm) {
+               if(alarmOn){
+               lum += 10;
+               temp += 10;
+               alarmOn = false;
+               }
+         }
+       }
+       if(fs.fil)
+       updateLampConfig(lum,temp);
+     },100);
 });
 
 

@@ -11,8 +11,8 @@ a {
 	position: relative;
 	z-index: 998;
 	top: 0; left: 0;
-	width: 100px;
-	height: 20px;
+	width: 1px;
+	height: 1px;
 	color: white;
 	text-align: center;
 }
@@ -24,6 +24,10 @@ a {
 	margin: 0; padding: 0;
 	margin-right: 40px;
 	font-size: 2em;
+}
+
+.energy {
+	height: 40px;
 }
 
 #drawer {
