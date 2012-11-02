@@ -63,52 +63,9 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-// Rpi functions
-
-
-
-// FOR GPIO
-var _open = function(pin, fn) { return gpio.export(pin, {ready: fn}); };
-
-var _close = function(pin, fn) {
-  if(typeof pin === "number") {
-    gpio.unexport(pin, fn);
-  } else if(typeof pin === "object") {
-    pin.unexport(fn);
-  }
-};
-
-// FOR SERIAL
-var light = function(lum, temp) {
-  // if(lum >= 0)
-  //   serialPort.write("l"+lum);
-  // if(temp >= 0)
-  //   serialPort.write("t"+temp);
-
-
-  if(lum >= 0)
-    board.analogWrite(lumPin, lum);
-  if(temp >= 0)
-    board.analogWrite(temPin, temp);
-
-
-  // This should _really_ update on 
-  // response from the arduino that
-  // serial wrote successfully.
-  //updateLampConfig(lum,temp);
-};
-
-var checkMode = function() {
-  return config.setupMode;
-};
-
-
-// Routes
-// serialPort.on('data', function (data) {
-//   sys.puts("owl: " + data);
-//   //if(data)
-// });
-
+  ////////////////////////
+ // Primary Routes     //
+////////////////////////
 
 app.get('/', function(req, res){
 
@@ -117,6 +74,7 @@ app.get('/', function(req, res){
   });
 });
 
+// Gets status
 app.get('/status', function(req,res) {
   var configFile = fs.readFileSync(configPath);
   var content = JSON.parse(configFile);
@@ -124,6 +82,7 @@ app.get('/status', function(req,res) {
   res.send(content);
 });
 
+// Retrieves SSIDs
 app.get('/ssid', function(req,res) {
   var ssid = '';
   var ssidArr = [];
@@ -148,6 +107,8 @@ app.get('/ssid', function(req,res) {
   //ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
 });
 
+
+// Modifies SSIDs
 app.post('/ssid', function(req,res) {
   var conf = {}
   console.log("Changing wlan: " + conf);
@@ -359,36 +320,47 @@ var updateLampConfig = function(lum,temp) {
       }
   });
 };
+var light = function(lum, temp) {
+
+  // if(lum >= 0)
+  //   board.analogWrite(lumPin, lum);
+  // if(temp >= 0)
+  //   board.analogWrite(temPin, temp);
+};
+
+var checkMode = function() {
+  return config.setupMode;
+};
 
 
 //////////////////////////
 // Arduino firmata loop//
 ////////////////////////
 var board = new Board('/dev/ttyACM0', function(err) {
-    console.log('connected');
+    console.log('connected ' + board);
     
 
     board.pinMode(lumPin, board.MODES.PWM);
     board.pinMode(temPin, board.MODES.PWM);
     board.pinMode(testPin, board.MODES.PWM)
 
-    setInterval(function(){
-      console.log("Setting lum" + lum + "and temp" + temp);
-      board.analogWrite(lumPin, lum);
-      board.analogWrite(temPin, temp);
-      //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-      if(alarmOn) {
-        if( new Date().getHours() == alarm) {
-              if(alarmOn){
-              lum += 10;
-              temp += 10;
-              alarmOn = false;
-              }
-        }
-      }
-    },1000)
+    // setInterval(function(){
+    //   //console.log("Setting lum" + lum + "and temp" + temp);
+    //   board.analogWrite(lumPin, lum);
+    //   board.analogWrite(temPin, temp);
+    //   //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
+    //   if(alarmOn) {
+    //     if( new Date().getHours() == alarm) {
+    //           if(alarmOn){
+    //           lum += 10;
+    //           temp += 10;
+    //           alarmOn = false;
+    //           }
+    //     }
+    //   }
+    // },1000);
 });
 
 
 app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.settings.port, app.settings.env);
+console.log("THE OWL LIVES");
