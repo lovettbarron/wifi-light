@@ -360,19 +360,6 @@ var updateLampConfig = function(lum,temp) {
   });
 };
 
-var triggerAlarm = function() {
-  lum = 0;
-  temp = 0;
-
-  setInterval(function() {
-    if(alarmOn){
-    lum += 1;
-    temp += 1;
-    alarmOn = false;
-    }
-  },100);
-}
-
 
 //////////////////////////
 // Arduino firmata loop//
@@ -392,11 +379,15 @@ var board = new Board('/dev/ttyACM0', function(err) {
       //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
       if(alarmOn) {
         if( new Date().getHours() == alarm) {
-          triggerAlarm();
+              if(alarmOn){
+              lum += 10;
+              temp += 10;
+              alarmOn = false;
+              }
         }
       }
       updateLampConfig(lum,temp);
-    },100)
+    },500)
 });
 
 

@@ -17,8 +17,6 @@ $(document).ready( function(){
 		$('.alarmClock').find('.active').removeClass('active');
 		$('.alarmClock select').val(data.alarm.time);
 
-
-
 		jQuery.each(status.preset, function() {
 			$('.presets').append('<li>' + this.name + "</li>");
 		})
