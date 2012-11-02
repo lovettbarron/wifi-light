@@ -108,18 +108,6 @@ $(document).ready( function(){
 		$('.ssid').html(items.toString());
 	});
 
-	$.getJSON('/ssid', function(data) {
-		var items = [];
-		$.each(data, function(key, val) {
-			if(val !== '') {
-			items.push('<option>' + val + '</option>');
-			}
-			});
-		console.log("data:" + data)
-		$('.ssid').html(items.toString());
-	});
-
-
 
 	$('a.drawer').click( function(e) {
 		if(drawer == true) drawer = false;

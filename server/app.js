@@ -311,8 +311,8 @@ var checkMode = function() {
 //////////////////////////
 // Arduino firmata loop//
 ////////////////////////
-var board = new Board('/dev/tty.usbmodem411', function() { // This is for OSX testing
-//var board = new Board('/dev/ttyACM0', function(err) {
+//var board = new Board('/dev/tty.usbmodem411', function() { // This is for OSX testing
+var board = new Board('/dev/ttyACM0', function(err) {
     console.log('connected ' + JSON.stringify(board));
     
 
