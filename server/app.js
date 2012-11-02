@@ -138,21 +138,6 @@ app.post('/ssid', function(req,res) {
 
 });
 
-app.post('/light/:lum?/:temp?', function(req,res) {
-  var lum, temp;
-  if(req.params.lum == '') {
-    lum = config.lamp.lum;
-  } else {
-    lum = req.params.lum;
-  }
-
-  if(req.params.temp == '') {
-    temp = config.lamp.temp;
-  } else {
-    temp = req.params.temp;
-  }
-}); 
-
 app.get('/temp/:temp', function(req,res) {
 
   if(req.params.temp == '') {
@@ -207,8 +192,6 @@ app.post('/config/:type?/:ssid?/:pass?', function(req,res) {
 ///////////////////////
 
 var broadcastMode = function() {
-  var configFile = fs.readFileSync('../config.js');
-  var content = JSON.parse(configFile);
   changeNetwork("adhoc"); 
 }
 
@@ -337,13 +320,14 @@ var checkMode = function() {
 // Arduino firmata loop//
 ////////////////////////
 var board = new Board('/dev/ttyACM0', function(err) {
-    console.log('connected ' + board);
+    console.log('connected ' + JSON.stringify(board));
     
 
     board.pinMode(lumPin, board.MODES.PWM);
     board.pinMode(temPin, board.MODES.PWM);
     board.pinMode(testPin, board.MODES.PWM)
-
+    
+    console.trace("Setting board modes");
     // setInterval(function(){
     //   //console.log("Setting lum" + lum + "and temp" + temp);
     //   board.analogWrite(lumPin, lum);
