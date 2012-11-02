@@ -199,7 +199,7 @@ app.get('/temp/:temp', function(req,res) {
   } else {
     temp = Math.floor(req.params.temp);
   }
-
+      updateLampConfig(lum,temp);
  // light(-1, req.params.temp);
   console.log("Setting temp " + req.params.temp);
   res.send('Done temp ' + req.params.temp);
@@ -211,7 +211,7 @@ app.get('/lum/:lum', function(req,res) {
   } else {
     lum = Math.floor(req.params.lum);
   }
-
+    updateLampConfig(lum,temp);
  // light(lum, -1);
   console.log("Setting lum " + req.params.lum);
   res.send('Done lum ' + req.params.lum);
@@ -386,8 +386,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
               }
         }
       }
-      updateLampConfig(lum,temp);
-    },500)
+    },1000)
 });
 
 
