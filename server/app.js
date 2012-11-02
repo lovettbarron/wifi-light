@@ -223,7 +223,7 @@ app.get('/alarm/:time', function(req,res) {
   alarm = req.params.time;
   console.log("Setting lum " + req.params.lum);
   res.send('Done lum ' + req.params.lum);
-  
+  alarmOn = true;
   content.alarm.time = alarm;
   content.alarm.on = alarmOn;
 
@@ -259,11 +259,37 @@ var joinMode = function() {
 
 var changeNetwork = function(type,ssid,pass) {
   var network = fs.readFileSync('../interfaces.txt');
-  var current, output;
+  var current, output, netConf;
   switch(type) {
     case 'wpa':
+      netConf = ' '+
+          'network={' +
+          'ssid="' + ssid + '"' +
+          'proto=RSN' +
+          'key_mgmt=WPA-PSK' +
+          'pairwise=CCMP TKIP' +
+          'group=CCMP TKIP' +
+          'psk="' + pass + '"'+
+          '}';
+
+      fs.writeFile(network, netConf, function(err) {
+        if (err) {
+          console.log('There has been an error saving network data.');
+          console.log(err.message);
+          return;
+          }
+      });
+
+      exec('sudo /etc/init.d/networking restart'
+        , function (error, stdout, stderr) {
+          if(error) console.log("Err: " + error + stderr);
+          output = stdout.toString();
+          console.log(output);
+        });
+
       break;
     case 'wep':
+
       break;
     case 'adhoc': //adhoc
 
@@ -334,6 +360,19 @@ var updateLampConfig = function(lum,temp) {
   });
 };
 
+var triggerAlarm = function() {
+  lum = 0;
+  temp = 0;
+
+  setInterval(function() {
+    if(alarmOn){
+    lum += 1;
+    temp += 1;
+    alarmOn = false;
+    }
+  },100);
+}
+
 
 //////////////////////////
 // Arduino firmata loop//
@@ -356,6 +395,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
           triggerAlarm();
         }
       }
+      updateLampConfig(lum,temp);
     },100)
 });
 

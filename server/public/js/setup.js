@@ -4,6 +4,7 @@ var active = false;
 var status = {};
 
 $(document).ready( function(){
+	init();
 	$('.dropdown-toggle').dropdown();
 	$('.collapse-toggle').collapse();
 	$('#settings').tab('show');
@@ -15,10 +16,18 @@ $(document).ready( function(){
 		status = data;
 		$('.alarmClock').find('.active').removeClass('active');
 		$('.alarmClock select').val(data.alarm.time);
-		$('.alarmTime').html( data.alarm.time + ":00" );
 
 
-	$('#xypad').css({
+
+		jQuery.each(status.preset, function() {
+			$('.presets').append('<li>' + this.name + "</li>");
+		})
+
+		if(data.alarm.on)
+			$('.alarmTime').html( "Wakeup at " + data.alarm.time + ":00" );
+
+
+		$('#xypad').css({
 			'background-color' : getColor(status.lamp.temp,status.lamp.lum/255)
 		});
 
@@ -32,7 +41,7 @@ $(document).ready( function(){
 		}
 
 
-		});
+	});
 
 	openDrawer(false);
 
@@ -43,14 +52,14 @@ $(document).ready( function(){
 		$.getJSON('/alarm/' + alarmTime, function(data) {
 			console.log(data);
 		});
-		$('.alarmTime').html( alarmTime + ":00" );
+		$('.alarmTime').html( "Wakeup at " + alarmTime + ":00" );
 	})
 
 
 	$('#xypad').mousemove( function(e) {
-		var buffer = 80;
-		if( e.pageY >= buffer-$(window).innerHeight())
-			var lum = 255-Math.floor(255 * ( ( e.pageY)/ $(window).innerHeight()));
+		var buffer = 40;
+		if( e.pageY <= $(window).innerHeight()-100)
+			var lum = 255-Math.floor(255 * ( ( e.pageY)/ ($(window).innerHeight()-100)));
 		else var lum = 0;
 		var temp =  Math.floor(255 * ( e.pageX / $(window).innerWidth()));
 
@@ -176,4 +185,35 @@ function submit() {
 		console.log('Successful:' + data);
 		});
 	}
+}
+
+function touchHandler(event)
+{
+ var touches = event.changedTouches,
+    first = touches[0],
+    type = "";
+
+     switch(event.type)
+{
+    case "touchstart": type = "mousedown"; break;
+    case "touchmove":  type="mousemove"; break;        
+    case "touchend":   type="mouseup"; break;
+    default: return;
+}
+var simulatedEvent = document.createEvent("MouseEvent");
+simulatedEvent.initMouseEvent(type, true, true, window, 1,
+                          first.screenX, first.screenY,
+                          first.clientX, first.clientY, false,
+                          false, false, false, 0/*left*/, null);
+
+first.target.dispatchEvent(simulatedEvent);
+event.preventDefault();
+}
+
+function init()
+{
+   document.addEventListener("touchstart", touchHandler, true);
+   document.addEventListener("touchmove", touchHandler, true);
+   document.addEventListener("touchend", touchHandler, true);
+   document.addEventListener("touchcancel", touchHandler, true);    
 }
