@@ -22,7 +22,7 @@ block index
 					form.dropdown.alarmClock
 						select
 							- for (var i=1;i<24;++i) {
-								option#alarm{i}= i
+								option(id=i)= i
 							-}
 					a.btn.setAlarm Set Alarm
 
@@ -43,7 +43,13 @@ block index
 						a.btn.submit Save and restart Owl
 					.clearfix
 						a.btn.pull-right.drawer Close
-	.nav.nav-bar.fixed-bottom
+	
+
+	.nav.nav-bar.navbar-fixed-bottom
 		.navbar-inner
-			ul.navbar
-				a Test
+			.container
+				ul.navbar
+					li
+						a.office Office
+					li
+						a.home Home
