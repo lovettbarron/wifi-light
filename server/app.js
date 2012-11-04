@@ -74,10 +74,7 @@ app.get('/new', function(req, res){
 
 // Gets status
 app.get('/status', function(req,res) {
-  var configFile = fs.readFileSync(configPath);
-  var content = JSON.parse(configFile);
-
-  res.send(content);
+  res.send(config);
 });
 
 // Retrieves SSIDs
@@ -113,40 +110,22 @@ app.post('/ssid', function(req,res) {
 
   var configFile = fs.readFileSync(configPath);
   var content = JSON.parse(configFile);
-  content.network.ssid = req.body.ssid;
-  content.network.pass = req.body.pass;
-  content.owner.owner = req.body.owner;
-  content.owner.email = req.body.email;
-  content.owner.first = new Date();
+  config.network.ssid = req.body.ssid;
+  config.network.pass = req.body.pass;
+  config.owner.owner = req.body.owner;
+  config.owner.email = req.body.email;
+  config.owner.first = new Date();
 
   console.log(content)
-
-  fs.writeFile(configPath, JSON.stringify(content), function(err) {
-    if (err) {
-      console.log('There has been an error saving your configuration data.');
-      console.log(err.message);
-      return;
-    }
-    console.log('Configuration saved successfully.')
-    // If successful, 
-    // call script that changes /etc/network/interfaces
-    // and returns some successful result
-
-  })
 
 });
 
 app.get('/temp/:temp', function(req,res) {
-
   if(req.params.temp == '') {
     temp = Math.floor(config.lamp.temp);
   } else {
     temp = Math.floor(req.params.temp);
   }
-      
- // light(-1, req.params.temp);
-  console.log("Setting temp " + req.params.temp);
-  res.send('Done temp ' + req.params.temp);
 });
 
 app.get('/lum/:lum', function(req,res) {
@@ -155,28 +134,13 @@ app.get('/lum/:lum', function(req,res) {
   } else {
     lum = Math.floor(req.params.lum);
   }
- // light(lum, -1);
-  console.log("Setting lum " + req.params.lum);
-  res.send('Done lum ' + req.params.lum);
 });
 
 app.get('/alarm/:time', function(req,res) {
-  var configFile = fs.readFileSync('../config.js');
-  var content = JSON.parse(configFile);
   alarm = req.params.time;
-  console.log("Setting lum " + req.params.lum);
-  res.send('Done lum ' + req.params.lum);
   alarmOn = true;
-  content.alarm.time = alarm;
-  content.alarm.on = alarmOn;
-
-  fs.writeFile(configPath, JSON.stringify(content), function(err) {
-    if (err) {
-      console.log('There has been an error saving config data.');
-      console.log(err.message);
-      return;
-      }
-  });
+  config.alarm.time = alarm;
+  config.alarm.on = alarmOn;
 });
 
 app.post('/config/:type?/:ssid?/:pass?', function(req,res) {
@@ -193,9 +157,7 @@ var broadcastMode = function() {
 }
 
 var joinMode = function() {
-  var configFile = fs.readFileSync('../config.js');
-  var content = JSON.parse(configFile);
-  changeNetwork(content.network.type, content.network.ssid, content.network.pass); 
+  changeNetwork(config.network.type, config.network.ssid, config.network.pass); 
 }
 
 var changeNetwork = function(type,ssid,pass) {
@@ -287,14 +249,6 @@ var reset = function() {
     });
   };
 
-var updateLampConfig = function(lum,temp) {
-  var configFile = fs.readFileSync('../config.js');
-  var content = JSON.parse(configFile);
-  content.lamp.lum = lum;
-  content.lamp.temp = temp;
-  fs.writeFileSync(configPath, JSON.stringify(content));
-  
-};
 var light = function(lum, temp) {
 
   // if(lum >= 0)
@@ -307,12 +261,24 @@ var checkMode = function() {
   return config.setupMode;
 };
 
+var saveToConfig = function() {
+  var configFile = fs.readFileSync('../config.js');
+  var content = JSON.parse(configFile);
+    fs.writeFileSync(configPath, JSON.stringify(config), function(err) {
+    if (err) {
+      console.log('There has been an error saving your configuration data.');
+      console.log(err.message);
+      return;
+      }
+    });
+}
+
 
 //////////////////////////
 // Arduino firmata loop//
 ////////////////////////
-//var board = new Board('/dev/tty.usbmodem411', function() { // This is for OSX testing
-var board = new Board('/dev/ttyACM0', function(err) {
+var board = new Board('/dev/tty.usbmodem411', function() { // This is for OSX testing
+//var board = new Board('/dev/ttyACM0', function(err) {
     console.log('connected ' + JSON.stringify(board));
     
 
@@ -331,17 +297,22 @@ var board = new Board('/dev/ttyACM0', function(err) {
        if(alarmOn) {
          if( new Date().getHours() == alarm) {
                if(alarmOn){
-               lum += 10;
-               temp += 10;
-               alarmOn = false;
+               lum += 1;
+               temp += 1;
+               //alarmOn = false;
                }
          }
        }
-       if(fs.fil)
-       updateLampConfig(lum,temp);
+      //, if(fs.fil)
      },100);
 });
 
+var saveToDisk = function() {
+  setInterval(function() {
+    saveToConfig();
+  }, 5000)
+}
 
-app.listen(3000);
+
+app.listen(80);
 console.log("THE OWL LIVES");
