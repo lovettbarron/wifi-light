@@ -311,7 +311,7 @@ var board = new Board('/dev/ttyUSB0', function(err) {
 var saveToDisk = function() {
   setInterval(function() {
     saveToConfig();
-  }, 5000)
+  }, 30000)
 }
 
 
