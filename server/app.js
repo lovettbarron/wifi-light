@@ -108,7 +108,7 @@ app.post('/ssid', function(req,res) {
   var conf = {}
   console.log("Changing wlan: " + conf);
 
-  var configFile = fs.readFileSync(configPath);
+  var configFile = fs.readFile(configPath);
   var content = JSON.parse(configFile);
   config.network.ssid = req.body.ssid;
   config.network.pass = req.body.pass;
@@ -161,7 +161,7 @@ var joinMode = function() {
 }
 
 var changeNetwork = function(type,ssid,pass) {
-  var network = fs.readFileSync('../interfaces.txt');
+  var network = fs.readFile('../interfaces.txt');
   var current, output, netConf;
   switch(type) {
     case 'wpa':
@@ -238,7 +238,7 @@ var changeNetwork = function(type,ssid,pass) {
 
 
 var reset = function() {
-  var configFile = fs.readFileSync('../config_default.js');
+  var configFile = fs.readFile('../config_default.js');
   var content = JSON.parse(configFile);
     fs.writeFile(configPath, JSON.stringify(content), function(err) {
     if (err) {
@@ -262,13 +262,15 @@ var checkMode = function() {
 };
 
 var saveToConfig = function() {
-  //var configFile = fs.readFileSync('../ config.js');
-  var content = JSON.parse(configFile);
-  fs.writeFileSync(configPath, JSON.stringify(config), function(err) {
+  //  var configFile = fs.readFileSync('../ config.js');
+  // var content = JSON.parse(configFile);
+
+  fs.writeFile(configPath, JSON.stringify(config), function(err) {
     if (err) {
       console.log('There has been an error saving your configuration data.');
       console.log(err.message);
-      return;
+      } else {
+        console.log("File written!");
       }
     });
 }
