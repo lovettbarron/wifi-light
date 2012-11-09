@@ -262,9 +262,9 @@ var checkMode = function() {
 };
 
 var saveToConfig = function() {
-  var configFile = fs.readFileSync('../config.js');
+  //var configFile = fs.readFileSync('../ config.js');
   var content = JSON.parse(configFile);
-    fs.writeFileSync(configPath, JSON.stringify(config), function(err) {
+  fs.writeFileSync(configPath, JSON.stringify(config), function(err) {
     if (err) {
       console.log('There has been an error saving your configuration data.');
       console.log(err.message);
