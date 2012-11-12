@@ -126,6 +126,7 @@ app.get('/temp/:temp', function(req,res) {
   } else {
     temp = Math.floor(req.params.temp);
   }
+  tempValue(temp);
 });
 
 app.get('/lum/:lum', function(req,res) {
@@ -134,6 +135,9 @@ app.get('/lum/:lum', function(req,res) {
   } else {
     lum = Math.floor(req.params.lum);
   }
+
+  lumValue(lum);
+
 });
 
 app.get('/alarm/:time', function(req,res) {
@@ -177,13 +181,12 @@ var changeNetwork = function(type,ssid,pass) {
 
       fs.writeFile(network, netConf, function(err) {
         if (err) {
-          console.log('There has been an error saving network data.');
+          console.log('There has been an error saving wpa network data.');
           console.log(err.message);
-          return;
           }
       });
 
-      exec('sudo /etc/init.d/networking restart'
+      exec('./etc/init.d/networking restart'
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -192,7 +195,22 @@ var changeNetwork = function(type,ssid,pass) {
 
       break;
     case 'wep':
+      netConf = ' '+
+          'network={' +
+          'ssid="' + ssid + '"' +
+          'proto=RSN' +
+          'key_mgmt=WPA-PSK' +
+          'pairwise=CCMP TKIP' +
+          'group=CCMP TKIP' +
+          'psk="' + pass + '"'+
+          '}';
 
+      fs.writeFile(network, netConf, function(err) {
+        if (err) {
+          console.log('There has been an error saving wpa network data.');
+          console.log(err.message);
+          }
+      });
       break;
     case 'adhoc': //adhoc
 
@@ -230,6 +248,7 @@ var changeNetwork = function(type,ssid,pass) {
 
       break;
     default:
+      broadcastMode();  
       break;
   }
   
@@ -280,8 +299,8 @@ var saveToConfig = function() {
 // Arduino firmata loop//
 ////////////////////////
 //var board = new Board('/dev/tty.usbmodem411', function() { // This is for OSX testing
-//var board = new Board('/dev/ttyACM0', function(err) {
-var board = new Board('/dev/ttyUSB0', function(err) {
+//var board = new Board('/dev/ttyACM0', function(err) { // This is for Arduino UNO
+var board = new Board('/dev/ttyUSB0', function(err) { // For Arduino Nano w/ 328 on RPI
   
     console.log('connected ' + JSON.stringify(board));
     
@@ -291,30 +310,41 @@ var board = new Board('/dev/ttyUSB0', function(err) {
     board.pinMode(testPin, board.MODES.PWM)
 
     console.trace("Setting board modes");
-     setInterval(function(){
-       //console.log("Setting lum" + lum + "and temp" + temp);
-       board.analogWrite(lumPin, lum);
-       if(lum==0)
-         board.analogWrite(temPin, lum);
-       else board.analogWrite(temPin, temp);
-       //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-       if(alarmOn) {
-         if( new Date().getHours() == alarm) {
-               if(alarmOn){
-               lum += 1;
-               temp += 1;
-               //alarmOn = false;
-               }
-         }
-       }
-     },100);
+     // setInterval(function(){
+     //   //console.log("Setting lum" + lum + "and temp" + temp);
+     //   board.analogWrite(lumPin, lum);
+     //   if(lum==0)
+     //     board.analogWrite(temPin, lum);
+     //   else board.analogWrite(temPin, temp);
+     //   //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
+     //   if(alarmOn) {
+     //     if( new Date().getHours() == alarm) {
+     //           if(alarmOn){
+     //           lum += 1;
+     //           temp += 1;
+     //           //alarmOn = false;
+     //           }
+     //     }
+     //   }
+     // },100);
 });
 
-var saveToDisk = function() {
-  setInterval(function() {
-    saveToConfig();
-  }, 30000)
+var lumValue = function(lum) {
+  board.analogWrite(lumPin, lum);
+  console.log("Setting lum value to " + lum)
 }
+
+var tempValue = function(temp) {
+  board.analogWrite(temPin, temp);
+  console.log("Setting temp value to " + temp)
+}
+
+
+// var saveToDisk = function() {
+//   setInterval(function() {
+//     saveToConfig();
+//   }, 30000)
+// }
 
 
 app.listen(3000);
