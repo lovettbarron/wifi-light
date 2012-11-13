@@ -16,8 +16,11 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require('../configLoad.js')
+  , five = require("johnny-five")
+    // or "./lib/johnny-five" when running from the source
+  , board = new five.Board();
   //, serialport = require('serialport')
-  , Board = require('firmata').Board;
+  //, Board = require('firmata').Board;
   //, gpio = require('gpio');
     
 var mode = 0; // Setup mode
@@ -165,7 +168,7 @@ var joinMode = function() {
 }
 
 var changeNetwork = function(type,ssid,pass) {
-  var network = fs.readFile('../interfaces.txt');
+  var network = '/etc/network.conf';
   var current, output, netConf;
   switch(type) {
     case 'wpa':
@@ -340,12 +343,34 @@ var tempValue = function(temp) {
 }
 
 
-// var saveToDisk = function() {
+board.on("ready", function() {
+
+  var lumLED = new five.Led(lumPin);
+  var tempLED = new five.Led(tempPin);
+
+  board.repl.inject({
+    led: led
+  });
+
+  led.fadeIn();
+
+
+  // Toggle the led after 10 seconds (shown in ms)
+  this.wait( 5000, function() {
+
+    led.fadeOut();
+
+  });
+});
+
+
+
+// var saveToDisk = function() {mess
 //   setInterval(function() {
 //     saveToConfig();
 //   }, 30000)
 // }
-
+broadcastMode();
 
 app.listen(3000);
 console.log("THE OWL LIVES");
