@@ -172,29 +172,13 @@ var changeNetwork = function(type,ssid,pass) {
   var current, output, netConf;
   switch(type) {
     case 'wpa':
-      netConf = ' '+
-          'network={' +
-          'ssid="' + ssid + '"' +
-          'proto=RSN' +
-          'key_mgmt=WPA-PSK' +
-          'pairwise=CCMP TKIP' +
-          'group=CCMP TKIP' +
-          'psk="' + pass + '"'+
-          '}';
-
-      fs.writeFile(network, netConf, function(err) {
-        if (err) {
-          console.log('There has been an error saving wpa network data.');
-          console.log(err.message);
-          }
-      });
-
-      exec('./etc/init.d/networking restart'
+          exec('../connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
           console.log(output);
         });
+
 
       break;
     case 'wep':
@@ -217,36 +201,11 @@ var changeNetwork = function(type,ssid,pass) {
       break;
     case 'adhoc': //adhoc
 
-      // First get the wireless up
-      exec('ifconfig wlan0 up'
+      exec('../broadcash.sh'
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
           console.log(output);
-        });
-
-      // Setup the wireless network into adhoc mode
-      exec('iwconfig wlan0 mode ad-hoc'
-        , function (error, stdout, stderr) {
-          if(error) console.log("Err: " + error + stderr);
-          output = stdout.toString();
-          console.log(ssid);
-        });
-
-      // Setup the wireless network to adhoc mode
-      exec('iwconfig wlan0 essid "owl"'
-        , function (error, stdout, stderr) {
-          if(error) console.log("Err: " + error + stderr);
-          output = stdout.toString();
-          console.log(ssid);
-        });
-
-      // Set a static IP
-      exec('sudo ifconfig wlan0 inet 172.0.0.1'
-        , function (error, stdout, stderr) {
-          if(error) console.log("Err: " + error + stderr);
-          output = stdout.toString();
-          console.log(ssid);
         });
 
       break;
@@ -301,36 +260,6 @@ var saveToConfig = function() {
 //////////////////////////
 // Arduino firmata loop//
 ////////////////////////
-//var board = new Board('/dev/tty.usbmodem411', function() { // This is for OSX testing
-//var board = new Board('/dev/ttyACM0', function(err) { // This is for Arduino UNO
-var board = new Board('/dev/ttyUSB0', function(err) { // For Arduino Nano w/ 328 on RPI
-  
-    console.log('connected ' + JSON.stringify(board));
-    
-
-    board.pinMode(lumPin, board.MODES.PWM);
-    board.pinMode(temPin, board.MODES.PWM);
-    board.pinMode(testPin, board.MODES.PWM)
-
-    console.trace("Setting board modes");
-     // setInterval(function(){
-     //   //console.log("Setting lum" + lum + "and temp" + temp);
-     //   board.analogWrite(lumPin, lum);
-     //   if(lum==0)
-     //     board.analogWrite(temPin, lum);
-     //   else board.analogWrite(temPin, temp);
-     //   //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-     //   if(alarmOn) {
-     //     if( new Date().getHours() == alarm) {
-     //           if(alarmOn){
-     //           lum += 1;
-     //           temp += 1;
-     //           //alarmOn = false;
-     //           }
-     //     }
-     //   }
-     // },100);
-});
 
 var lumValue = function(lum) {
   board.analogWrite(lumPin, lum);

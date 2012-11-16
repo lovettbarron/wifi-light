@@ -22,3 +22,6 @@ Serial chip: Silicon Labs CP210x;
 Serial port: /dev/ttyUSB0.
 */
 ```
+
+### Sudo at startup
+http://askubuntu.com/questions/21343/how-to-make-sudo-remember-my-password-and-how-to-add-an-application-to-startup?rq=1
