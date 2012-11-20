@@ -201,7 +201,7 @@ var changeNetwork = function(type,ssid,pass) {
       break;
     case 'adhoc': //adhoc
 
-      exec('../broadcash.sh'
+      exec('../broadcast.sh'
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -262,34 +262,40 @@ var saveToConfig = function() {
 ////////////////////////
 
 var lumValue = function(lum) {
-  board.analogWrite(lumPin, lum);
+  board.lum(lum);
   console.log("Setting lum value to " + lum)
 }
 
 var tempValue = function(temp) {
-  board.analogWrite(temPin, temp);
+  //board.analogWrite(temPin, temp);
+  board.temp(temp);
   console.log("Setting temp value to " + temp)
 }
 
 
+
 board.on("ready", function() {
+  var lumLED, tempLED;
+  lumLED = new five.Led({ pin: lumPin });
+  tempLED = new five.Led({ pin: temPin });
 
-  var lumLED = new five.Led(lumPin);
-  var tempLED = new five.Led(tempPin);
+   board.repl.inject({
+     lumLED: lumLED
+     , tempLED: tempLED
+   });
 
-  board.repl.inject({
-    led: led
-  });
-
-  led.fadeIn();
+   lumLED.fadeIn();
+   tempLED.fadeIn();
 
 
-  // Toggle the led after 10 seconds (shown in ms)
-  this.wait( 5000, function() {
+   board.temp = function(val) {
+    tempLED.fade(val, 400);
+   }
 
-    led.fadeOut();
+  board.lum = function(val) {
+      lumLED.fade(val, 400);
+     }
 
-  });
 });
 
 
@@ -300,6 +306,8 @@ board.on("ready", function() {
 //   }, 30000)
 // }
 broadcastMode();
+
+
 
 app.listen(3000);
 console.log("THE OWL LIVES");
