@@ -77,7 +77,7 @@ app.get('/new', function(req, res){
 
 // Gets status
 app.get('/status', function(req,res) {
-  res.send(config);
+  //res.send(config);
 });
 
 // Retrieves SSIDs
@@ -124,23 +124,15 @@ app.post('/ssid', function(req,res) {
 });
 
 app.get('/temp/:temp', function(req,res) {
-  if(req.params.temp == '') {
-    temp = Math.floor(config.lamp.temp);
-  } else {
-    temp = Math.floor(req.params.temp);
-  }
+  temp = req.params.temp;
   tempValue(temp);
+  res.send('okay!');
 });
 
 app.get('/lum/:lum', function(req,res) {
-  if(req.params.lum == '') {
-    lum = Math.floor(config.lamp.lum);
-  } else {
-    lum = Math.floor(req.params.lum);
-  }
-
+  lum = req.params.lum;
   lumValue(lum);
-
+  res.send('okay!');
 });
 
 app.get('/alarm/:time', function(req,res) {
@@ -284,16 +276,18 @@ board.on("ready", function() {
      , tempLED: tempLED
    });
 
-   lumLED.fadeIn();
-   tempLED.fadeIn();
+   // lumLED.fadeIn();
+   // tempLED.fadeIn();
 
 
    board.temp = function(val) {
-    tempLED.fade(val, 400);
+    tempLED.brightness(val);
+    //lumLED.brightness(lum);
    }
 
   board.lum = function(val) {
-      lumLED.fade(val, 400);
+      //tempLED.brightness(temp);
+      lumLED.brightness(val);
      }
 
 });

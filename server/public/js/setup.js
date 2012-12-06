@@ -13,6 +13,7 @@ $(document).ready( function(){
 
 	$.getJSON('/status', function(data) {
 		console.log(data);
+		if(data)
 		status = data;
 		$('.alarmClock').find('.active').removeClass('active');
 		$('.alarmClock select').val(data.alarm.time);
