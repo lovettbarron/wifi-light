@@ -18,9 +18,9 @@ var express = require('express')
   , config = require('../configLoad.js')
   , five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
-  , board = new five.Board();
+  //, board = new five.Board()
   //, serialport = require('serialport')
-  //, Board = require('firmata').Board;
+  , Board = require('firmata').Board;
   //, gpio = require('gpio');
     
 var mode = 0; // Setup mode
@@ -265,7 +265,10 @@ var tempValue = function(temp) {
 }
 
 
-
+/* 
+////////////////////////////////////
+// // // Johnny Five stuff // // //
+//////////////////////////////////
 board.on("ready", function() {
   var lumLED, tempLED;
   lumLED = new five.Led({ pin: lumPin });
@@ -290,11 +293,48 @@ board.on("ready", function() {
       lumLED.brightness(val);
      }
 
+}); */
+
+var board = new Board('/dev/ttyUSB0', function(err) { // For Arduino Nano w/ 328 on RPI
+  
+    console.log('connected ' + JSON.stringify(board));
+    
+
+    board.pinMode(lumPin, board.MODES.PWM);
+    board.pinMode(temPin, board.MODES.PWM);
+    board.pinMode(testPin, board.MODES.PWM)
+
+    console.trace("Setting board modes");
+
+   board.prototype.temp = function(val) {
+    board.analogWrite(temPin, val);
+     }
+
+    board.prototype.lum = function(val) {
+      board.analogWrite(lumPin, val);
+      }
+     // setInterval(function(){
+     //   //console.log("Setting lum" + lum + "and temp" + temp);
+     //   board.analogWrite(lumPin, lum);
+     //   if(lum==0)
+     //     board.analogWrite(temPin, lum);
+     //   else board.analogWrite(temPin, temp);
+     //   //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
+     //   if(alarmOn) {
+     //     if( new Date().getHours() == alarm) {
+     //           if(alarmOn){
+     //           lum += 1;
+     //           temp += 1;
+     //           //alarmOn = false;
+     //           }
+     //     }
+     //   }
+     // },100);
 });
 
 
 
-// var saveToDisk = function() {mess
+// var saveToDisk = function() {
 //   setInterval(function() {
 //     saveToConfig();
 //   }, 30000)

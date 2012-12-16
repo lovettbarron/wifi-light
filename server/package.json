@@ -1,13 +1,17 @@
 {
-	"name": "fishtnk-owl"
+	"name" : "fishtnk-owl"
+	,"preferGlobal": true
 	, "author":"Relay Studio"
 	, "client":"Fishtnk Design"
 	, "version": "0.0.1"
 	, "private": true
 	, "dependencies": {
-	  	"node":"0.8.11"
-		, "express": "3.0"
+		"express": "3.0"
 		, "jade" : ">= 0.0.1"
-		, "johnny-five":">= 0.0.1"
-	}
+		, "serialport" : "1.0.6"
+		, "node-gyp" : "0.6.1"
+		, "firmata": "0.2.4"
+	} , "engines" : { 
+		"node" : "0.8.11"
+	 }
 }

@@ -53,6 +53,16 @@ a {
 	margin: 0;
 	z-index: 0;
 	overflow: hidden;
+
+
+	
+	background: -webkit-gradient(linear, left top, right top, from(#2F2727), 
+		color-stop(0.05, white), color-stop(0.5, #2F2727), color-stop(0.95, #1a82f7), to(#2F2727));
+	background: -webkit-linear-gradient(left, #2F2727, transparent 5%, #2F2727, yellow 95%, #2F2727);
+	background: -moz-linear-gradient(left, #2F2727, #1a82f7 5%, #2F2727, #1a82f7 95%, #2F2727);
+	background: -ms-linear-gradient(left, #2F2727, #1a82f7 5%, #2F2727, #1a82f7 95%, #2F2727);
+	background: -o-linear-gradient(left, #2F2727, #1a82f7 5%, #2F2727, #wh 95%, #2F2727);
+
 }
 
 
