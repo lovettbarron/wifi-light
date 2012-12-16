@@ -18,11 +18,13 @@ var express = require('express')
   , config = require('../configLoad.js')
   , five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
-  //, board = new five.Board()
+  , board = new five.Board()
   //, serialport = require('serialport')
-  , Board = require('firmata').Board;
+  //, Board = require('firmata').Board;
   //, gpio = require('gpio');
     
+var arduino;
+
 var mode = 0; // Setup mode
 
 var lumPin = 11
@@ -164,33 +166,23 @@ var changeNetwork = function(type,ssid,pass) {
   var current, output, netConf;
   switch(type) {
     case 'wpa':
-          exec('../connect.sh ' + ssid + ' ' + pass
+          exec('../connect.sh wpa ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
           console.log(output);
         });
-
-
       break;
+
     case 'wep':
-      netConf = ' '+
-          'network={' +
-          'ssid="' + ssid + '"' +
-          'proto=RSN' +
-          'key_mgmt=WPA-PSK' +
-          'pairwise=CCMP TKIP' +
-          'group=CCMP TKIP' +
-          'psk="' + pass + '"'+
-          '}';
-
-      fs.writeFile(network, netConf, function(err) {
-        if (err) {
-          console.log('There has been an error saving wpa network data.');
-          console.log(err.message);
-          }
-      });
+          exec('../connect.sh wep ' + ssid + ' ' + pass
+        , function (error, stdout, stderr) {
+          if(error) console.log("Err: " + error + stderr);
+          output = stdout.toString();
+          console.log(output);
+        });
       break;
+
     case 'adhoc': //adhoc
 
       exec('../broadcast.sh'
@@ -199,8 +191,8 @@ var changeNetwork = function(type,ssid,pass) {
           output = stdout.toString();
           console.log(output);
         });
-
       break;
+
     default:
       broadcastMode();  
       break;
@@ -253,19 +245,20 @@ var saveToConfig = function() {
 // Arduino firmata loop//
 ////////////////////////
 
-var lumValue = function(lum) {
+var lumValue = function(val) {
   board.lum(lum);
+  //arduino.analogWrite(lumPin, val);
   console.log("Setting lum value to " + lum)
 }
 
-var tempValue = function(temp) {
-  //board.analogWrite(temPin, temp);
-  board.temp(temp);
+var tempValue = function(val) {
+  board.analogWrite(temPin, temp);
+  //arduino.analogWrite(temPin, val);
   console.log("Setting temp value to " + temp)
 }
 
 
-/* 
+
 ////////////////////////////////////
 // // // Johnny Five stuff // // //
 //////////////////////////////////
@@ -293,45 +286,32 @@ board.on("ready", function() {
       lumLED.brightness(val);
      }
 
-}); */
-
-var board = new Board('/dev/ttyUSB0', function(err) { // For Arduino Nano w/ 328 on RPI
-  
-    console.log('connected ' + JSON.stringify(board));
-    
-
-    board.pinMode(lumPin, board.MODES.PWM);
-    board.pinMode(temPin, board.MODES.PWM);
-    board.pinMode(testPin, board.MODES.PWM)
-
-    console.trace("Setting board modes");
-
-   board.prototype.temp = function(val) {
-    board.analogWrite(temPin, val);
-     }
-
-    board.prototype.lum = function(val) {
-      board.analogWrite(lumPin, val);
-      }
-     // setInterval(function(){
-     //   //console.log("Setting lum" + lum + "and temp" + temp);
-     //   board.analogWrite(lumPin, lum);
-     //   if(lum==0)
-     //     board.analogWrite(temPin, lum);
-     //   else board.analogWrite(temPin, temp);
-     //   //board.analogWrite(testPin, (new Date().getMilliseconds)%255);
-     //   if(alarmOn) {
-     //     if( new Date().getHours() == alarm) {
-     //           if(alarmOn){
-     //           lum += 1;
-     //           temp += 1;
-     //           //alarmOn = false;
-     //           }
-     //     }
-     //   }
-     // },100);
 });
 
+
+
+// Board.prototype.temp = function(val) {
+//   this.analogWrite(temPin, val);
+//  }
+
+// Board.prototype.lum = function(val) {
+//   this.analogWrite(lumPin, val);
+//   }
+// tty.usbserial-A901C760
+//arduino = new Board('/dev/ttyUSB0', function(err) { // For Arduino Nano w/ 328 on RPI
+// arduino = new Board('/dev/tty.usbserial-A901C760', function(err) { // For Arduino Nano w/ 328 on OSX
+  
+//     console.log('connected ' + JSON.stringify(arduino));
+    
+
+//     this.pinMode(lumPin, this.MODES.PWM);
+//     this.pinMode(temPin, this.MODES.PWM);
+//     this.pinMode(testPin, this.MODES.PWM)
+
+//     console.trace("Setting board modes");
+
+
+// }).arduino;
 
 
 // var saveToDisk = function() {
