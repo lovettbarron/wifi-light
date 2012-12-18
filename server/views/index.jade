@@ -2,12 +2,16 @@ extends layout
 
 block index
 	.container-fluid
+		#logo
+			a.drawer(href='#')
+				img(src='img/logo.png')
 		#xypad
 			#lens
-		#drawer
+		#drawer.well
+			h3 Owl Smart Settings
 			ul#settings.nav.tabs.nav-tabs(data-tabs="tabs")
 				li.active
-					a(href='#intro',data-toggle="tab") Intro
+					a.active(href='#intro',data-toggle="tab") Intro
 				li
 					a(href='#register',data-toggle="tab") Register
 				li

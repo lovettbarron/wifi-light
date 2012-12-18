@@ -6,6 +6,7 @@ var status = {};
 $(document).ready( function(){
 	init();
 	$('.dropdown-toggle').dropdown();
+	$('ul#settings').find('li:first').addClass('active');
 	$('.collapse-toggle').collapse();
 	$('#settings').tab('show');
 
@@ -62,27 +63,40 @@ $(document).ready( function(){
 
 	$('#xypad').mousemove( function(e) {
 		var buffer = 40;
-		if( e.pageY <= $(window).innerHeight()-100)
-			var lum = 255-Math.floor(255 * ( ( e.pageY)/ ($(window).innerHeight()-100)));
-		else var lum = 0;
-		var temp =  Math.floor(255 * ( e.pageX / $(window).innerWidth()));
+		// if( e.pageY <= $(window).innerHeight()-100)
+		// 	var lum = 255-Math.floor(255 * ( ( e.pageY)/ ($(window).innerHeight()-100)));
+		// else var lum = 0;
+		// var temp =  Math.floor(255 * ( e.pageX / $(window).innerWidth()));
+
+		var x = e.pageX / $(window).innerWidth();
+		var y = e.pageY / $(window).innerHeight();
 
 
-
-		if(lum < 0) {
-			lum = 0;
-			ative = false
-		} else {
-			active = true;
+		// if(lum < 0) {
+		// 	lum = 0;
+		// 	ative = false
+		// } else {
+		// 	active = true;
+		// }
+		var lum, temp;
+		if(x <= .5) { // Brightness
+			changeColor(0, y*255);
+			lum = y*255;
+			temp = 0;
+		} else { // Temp
+			changeColor(y*255, y*255);
+			temp = y*255;
+			lum = y*255;
 		}
 
-		changeColor(temp, lum);
+
+		//changeColor(temp, lum);
 
 
 
-		$(this).css({
-			'background-color' : getColor(temp,lum/255)
-		});
+		// $(this).css({
+		// 	'background-color' : getColor(temp,lum/255)
+		// });
 
 		var string = (lum * temp / 100);
 		if(e.pageY > buffer + 40) {
@@ -110,7 +124,8 @@ $(document).ready( function(){
 	});
 
 
-	$('a.drawer').click( function(e) {
+	$('.drawer').click( function(e) {
+		
 		if(drawer == true) drawer = false;
 		else drawer = true;
 		openDrawer(drawer);

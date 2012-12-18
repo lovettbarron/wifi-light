@@ -17,6 +17,14 @@ a {
 	text-align: center;
 }
 
+#logo {
+	z-index: 99999;
+	position: absolute;
+	left: 0; top: 0;
+	background: transparent;
+	width: 10%;
+}
+
 .alarmTime {
 	float: right;
 	clear: none;

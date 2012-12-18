@@ -18,7 +18,9 @@ var express = require('express')
   , config = require('../configLoad.js')
   , five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
-  , board = new five.Board()
+  if(process.argv[2] == 'test')
+    var board = new five.Board()
+  else var board = {};
   //, serialport = require('serialport')
   //, Board = require('firmata').Board;
   //, gpio = require('gpio');
@@ -246,13 +248,16 @@ var saveToConfig = function() {
 ////////////////////////
 
 var lumValue = function(val) {
-  board.lum(lum);
+  if(process.argv[2] == 'test')
+    board.lum(val);
   //arduino.analogWrite(lumPin, val);
   console.log("Setting lum value to " + lum)
 }
 
 var tempValue = function(val) {
-  board.analogWrite(temPin, temp);
+  if(process.argv[2] == 'test')
+    if(process.argv[2] == 'test')
+      board.temp(val);
   //arduino.analogWrite(temPin, val);
   console.log("Setting temp value to " + temp)
 }
@@ -262,32 +267,36 @@ var tempValue = function(val) {
 ////////////////////////////////////
 // // // Johnny Five stuff // // //
 //////////////////////////////////
-board.on("ready", function() {
-  var lumLED, tempLED;
-  lumLED = new five.Led({ pin: lumPin });
-  tempLED = new five.Led({ pin: temPin });
-
-   board.repl.inject({
-     lumLED: lumLED
-     , tempLED: tempLED
-   });
-
-   // lumLED.fadeIn();
-   // tempLED.fadeIn();
 
 
-   board.temp = function(val) {
-    tempLED.brightness(val);
-    //lumLED.brightness(lum);
-   }
+// board.mock = true;
+if(process.argv[2] == 'test') {
+  board.on("ready", function() {
+    var lumLED, tempLED;
+    lumLED = new five.Led({ pin: lumPin });
+    tempLED = new five.Led({ pin: temPin });
 
-  board.lum = function(val) {
-      //tempLED.brightness(temp);
-      lumLED.brightness(val);
+     board.repl.inject({
+       lumLED: lumLED
+       , tempLED: tempLED
+     });
+
+     // lumLED.fadeIn();
+     // tempLED.fadeIn();
+
+
+     board.temp = function(val) {
+      tempLED.brightness(val);
+      //lumLED.brightness(lum);
      }
 
-});
+    board.lum = function(val) {
+        //tempLED.brightness(temp);
+        lumLED.brightness(val);
+       }
 
+  });
+}
 
 
 // Board.prototype.temp = function(val) {
