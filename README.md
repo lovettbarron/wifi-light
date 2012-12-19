@@ -48,3 +48,9 @@ Serial port: /dev/ttyUSB0.
 
 ### Sudo at startup
 http://askubuntu.com/questions/21343/how-to-make-sudo-remember-my-password-and-how-to-add-an-application-to-startup?rq=1
+
+
+### Lock file
+Call `lockfilecheck`
+IF sys is in the middle of backing up temp config, abort write
+Check sys

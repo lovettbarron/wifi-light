@@ -15,10 +15,10 @@ var express = require('express')
   , fs = require('fs')
   , sys = require('sys')
   , exec = require('child_process').exec
-  , config = require('../configLoad.js')
+  , config = require(__dirname + '/configLoad.js')
   , five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
-  if(process.argv[2] == 'test')
+  if(!process.argv[2] == 'test')
     var board = new five.Board()
   else var board = {};
   //, serialport = require('serialport')
@@ -168,7 +168,7 @@ var changeNetwork = function(type,ssid,pass) {
   var current, output, netConf;
   switch(type) {
     case 'wpa':
-          exec('../connect.sh wpa ' + ssid + ' ' + pass
+          exec(__dirname + '/connect.sh wpa ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -177,7 +177,7 @@ var changeNetwork = function(type,ssid,pass) {
       break;
 
     case 'wep':
-          exec('../connect.sh wep ' + ssid + ' ' + pass
+          exec(__dirname + '/connect.sh wep ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -187,7 +187,7 @@ var changeNetwork = function(type,ssid,pass) {
 
     case 'adhoc': //adhoc
 
-      exec('../broadcast.sh'
+      exec(__dirname + '/broadcast.sh'
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -205,7 +205,7 @@ var changeNetwork = function(type,ssid,pass) {
 
 
 var reset = function() {
-  var configFile = fs.readFile('../config_default.js');
+  var configFile = fs.readFile(__dirname + '/config_default.js');
   var content = JSON.parse(configFile);
     fs.writeFile(configPath, JSON.stringify(content), function(err) {
     if (err) {
@@ -248,15 +248,14 @@ var saveToConfig = function() {
 ////////////////////////
 
 var lumValue = function(val) {
-  if(process.argv[2] == 'test')
+  if(!process.argv[2] == 'test')
     board.lum(val);
   //arduino.analogWrite(lumPin, val);
   console.log("Setting lum value to " + lum)
 }
 
 var tempValue = function(val) {
-  if(process.argv[2] == 'test')
-    if(process.argv[2] == 'test')
+  if(!process.argv[2] == 'test')
       board.temp(val);
   //arduino.analogWrite(temPin, val);
   console.log("Setting temp value to " + temp)
@@ -270,7 +269,7 @@ var tempValue = function(val) {
 
 
 // board.mock = true;
-if(process.argv[2] == 'test') {
+if(!process.argv[2] == 'test') {
   board.on("ready", function() {
     var lumLED, tempLED;
     lumLED = new five.Led({ pin: lumPin });
