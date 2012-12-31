@@ -15,8 +15,9 @@ var express = require('express')
   , fs = require('fs')
   , sys = require('sys')
   , exec = require('child_process').exec
-  , config = require(__dirname + '/../configLoad.js')
-  , five = require("johnny-five")
+  , config = require(__dirname + '/../configLoad.js');
+  if(!process.argv[2] == 'test')
+    var five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
   if(!process.argv[2] == 'test')
     var board = new five.Board()
