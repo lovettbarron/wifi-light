@@ -32,12 +32,10 @@ a {
 }
 
 .alarmTime {
-	float: right;
-	clear: none;
-	width: 20%;
-	margin: 0; padding: 0;
-	margin-right: 40px;
-	font-size: 2em;
+	z-index: 99999;
+	width: 100%;
+	text-align: center;
+	background: transparent;
 }
 
 .energy {

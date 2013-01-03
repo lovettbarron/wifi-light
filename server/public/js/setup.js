@@ -15,7 +15,7 @@ $(document).ready( function(){
 	$.getJSON('/status', function(data) {
 		console.log(data);
 		if(data)
-		status = data;
+			status = data;
 		$('.alarmClock').find('.active').removeClass('active');
 		$('.alarmClock select').val(data.alarm.time);
 
@@ -34,7 +34,7 @@ $(document).ready( function(){
 			'background-color' : getColor(status.lamp.temp,status.lamp.lum/255)
 		});
 
-		var string = (lum * temp / 100);
+		var string = Math.round((lum + temp) / 100);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
@@ -56,8 +56,9 @@ $(document).ready( function(){
 		var alarmTime = $('.alarmClock select').val();
 		$.getJSON('/alarm/' + alarmTime, function(data) {
 			console.log(data);
+			openDrawer(false);
+			$('.alarmTime').html( "Wakeup at " + alarmTime + ":00" );
 		});
-		$('.alarmTime').html( "Wakeup at " + alarmTime + ":00" );
 	})
 
 
@@ -165,10 +166,10 @@ function openDrawer(open) {
 function changeColor(temp, lum) {
 
 
-		$.getJSON('/temp/' + temp, function(data) {
+		$.getJSON('/temp/' + Math.round(temp), function(data) {
 				console.log(data);
 			});
-		$.getJSON('/lum/' + lum, function(data) {
+		$.getJSON('/lum/' + Math.round(lum), function(data) {
 					console.log(data);
 				});
 }

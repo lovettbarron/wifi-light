@@ -7,7 +7,7 @@
 * http://github.com/relaystudio/fishtnk-owl
 ***********************/
 
-var configPath = '../config.js';
+var configPath = 'config.js';
 
 var express = require('express')
   , util = require('util')
@@ -25,7 +25,13 @@ var express = require('express')
   //, serialport = require('serialport')
   //, Board = require('firmata').Board;
   //, gpio = require('gpio');
-    
+  
+var writePath;  
+if(!process.argv[2] == 'test')
+  writePath = '/mnt/settings/owl/'
+else
+  writePath = __dirname + '../'
+
 var arduino;
 
 var mode = 0; // Setup mode
@@ -69,7 +75,7 @@ app.configure('production', function(){
 app.get('/', function(req, res){
 
   res.render('index', {
-    title: 'Fishtnk Setup'
+    title: 'Fishtnk Owl'
   });
 });
 
@@ -82,7 +88,8 @@ app.get('/new', function(req, res){
 
 // Gets status
 app.get('/status', function(req,res) {
-  //res.send(config);
+  console.log('Sending config status' + config)
+  res.send(config);
 });
 
 // Retrieves SSIDs
@@ -148,7 +155,22 @@ app.get('/alarm/:time', function(req,res) {
 });
 
 app.post('/config/:type?/:ssid?/:pass?', function(req,res) {
-  changeNetwork('adhoc');
+  switch(req.params.type) {
+    case 'wep':
+      config.network.type = "wep"
+      break;
+    case 'wpa':
+      config.network.type = "wpa"
+      break;
+    default:
+      break;
+  }
+
+  config.network.ssid = req.params.ssid;
+  config.network.pass = req.params.pass;
+
+  joinMode();
+
 }); 
 
 
@@ -161,12 +183,27 @@ var broadcastMode = function() {
 }
 
 var joinMode = function() {
-  changeNetwork(config.network.type, config.network.ssid, config.network.pass); 
+
+  changeNetwork(config.network.type, config.network.ssid, config.network.pass, function() {
+
+    exec(__dirname + '../wireless.sh'
+      , function (error, stdout, stderr) {
+        if(error) console.log("Err: " + error + stderr);
+        output = stdout.toString();
+
+        if(output = "0")
+          broadcastMode();
+        else
+          console.log("Successfully connected")
+    });
+
+  }); 
 }
 
-var changeNetwork = function(type,ssid,pass) {
+var changeNetwork = function(type,ssid,pass,callback) {
   var network = '/etc/network.conf';
   var current, output, netConf;
+
   switch(type) {
     case 'wpa':
           exec(__dirname + '/connect.sh wpa ' + ssid + ' ' + pass
@@ -188,7 +225,7 @@ var changeNetwork = function(type,ssid,pass) {
 
     case 'adhoc': //adhoc
 
-      exec(__dirname + '/broadcast.sh'
+      exec('sh ' + __dirname + '/../broadcast.sh'
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -200,7 +237,8 @@ var changeNetwork = function(type,ssid,pass) {
       broadcastMode();  
       break;
   }
-  
+
+  saveToConfig();
   return;
 }
 
@@ -233,14 +271,27 @@ var saveToConfig = function() {
   //  var configFile = fs.readFileSync('../ config.js');
   // var content = JSON.parse(configFile);
 
-  fs.writeFile(configPath, JSON.stringify(config), function(err) {
-    if (err) {
-      console.log('There has been an error saving your configuration data.');
-      console.log(err.message);
-      } else {
-        console.log("File written!");
-      }
+
+exec('sh ' + __dirname + '/../lockfilecheck.sh'
+      , function (error, stdout, stderr) {
+        if(error) console.log("Err: " + error + stderr);
+        output = stdout.toString();
+
+        if(output = "0") {
+         console.log("Writing to ram disk");
+         fs.writeFile(writePath + configPath, JSON.stringify(config), function(err) {
+          if (err) {
+            console.log('There has been an error saving your configuration data.');
+            console.log(err.message);
+            } else {
+              console.log("File written!");
+            }
+          });
+        } else {
+          console.log("The ram disk is currently locked, saving to storage")
+        }
     });
+
 }
 
 
@@ -328,7 +379,19 @@ if(!process.argv[2] == 'test') {
 //     saveToConfig();
 //   }, 30000)
 // }
-broadcastMode();
+
+ exec('sh ' + __dirname + '/../wireless.sh'
+      , function (error, stdout, stderr) {
+        if(error) console.log("Err: " + error + stderr);
+        output = stdout.toString();
+
+        if(output = "0") {
+          console.log("No network detected, starting adhoc");
+          broadcastMode();
+        } else {
+          console.log("Connected to wireless")
+        }
+    });
 
 
 
