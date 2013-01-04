@@ -39,7 +39,7 @@ echo "This computer's IP : $myip"
 echo "--------------------------------------"
 
 # debug
-#iwconfig $mywlan
+iwconfig $mywlan
 
 while true; do
 echo -n "Enter 'q' to quit. "
