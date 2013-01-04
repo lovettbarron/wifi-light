@@ -1,6 +1,6 @@
 var drawer = false;
 var active = false;
-
+var lum, temp;
 var status = {};
 
 $(document).ready( function(){
@@ -79,11 +79,10 @@ $(document).ready( function(){
 		// } else {
 		// 	active = true;
 		// }
-		var lum, temp;
 		if(x <= .5) { // Brightness
 			changeColor(0, y*255);
 			lum = y*255;
-			temp = 0;
+			//temp = 0;
 		} else { // Temp
 			changeColor(y*255, y*255);
 			temp = y*255;
@@ -99,7 +98,7 @@ $(document).ready( function(){
 		// 	'background-color' : getColor(temp,lum/255)
 		// });
 
-		var string = (lum * temp / 100);
+		var string = (lum * temp / 100).toFixed(2);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50

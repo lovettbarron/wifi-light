@@ -16,18 +16,22 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require(__dirname + '/../configLoad.js');
-  //if(!process.argv[2] == 'test')
+  //if(process.argv[2] !== 'test')
     var five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
-  if(!process.argv[2] == 'test')
+  if(process.argv[2] !== 'test') {
     var board = new five.Board()
-  else var board = {};
+    console.log("Loading Johnny 5")
+    }
+  else {
+    var board = {};
+  }
   //, serialport = require('serialport')
   //, Board = require('firmata').Board;
   //, gpio = require('gpio');
   
 var writePath;  
-if(!process.argv[2] == 'test')
+if(process.argv[2] !== 'test')
   writePath = '/mnt/settings/owl/'
 else
   writePath = __dirname + '../'
@@ -270,15 +274,19 @@ var checkMode = function() {
 var saveToConfig = function() {
   //  var configFile = fs.readFileSync('../ config.js');
   // var content = JSON.parse(configFile);
+  var lockPath = '/mnt/settings/owl/'
 
-
-exec('sh ' + __dirname + '/../lockfile.sh'
+  exec('sh ' + __dirname + '/../lockfile.sh'
       , function (error, stdout, stderr) {
         if(error) console.log("Err: " + error + stderr);
         output = stdout.toString();
 
         if(output = "0") {
-         console.log("Writing to ram disk");
+         console.log("Writing to ram disk")
+           exec('touch ' + lockPath + 'update.flag'
+          , function (error, stdout, stderr) {
+            
+            });
          fs.writeFile(writePath + configPath, JSON.stringify(config), function(err) {
           if (err) {
             console.log('There has been an error saving your configuration data.');
@@ -300,14 +308,14 @@ exec('sh ' + __dirname + '/../lockfile.sh'
 ////////////////////////
 
 var lumValue = function(val) {
-  if(!process.argv[2] == 'test')
+  if(process.argv[2] !== 'test')
     board.lum(val);
   //arduino.analogWrite(lumPin, val);
   console.log("Setting lum value to " + lum)
 }
 
 var tempValue = function(val) {
-  if(!process.argv[2] == 'test')
+  if(process.argv[2] !== 'test')
       board.temp(val);
   //arduino.analogWrite(temPin, val);
   console.log("Setting temp value to " + temp)
@@ -321,9 +329,9 @@ var tempValue = function(val) {
 
 
 // board.mock = true;
-if(!process.argv[2] == 'test') {
+if(process.argv[2] !== 'test') {
+  var lumLED, tempLED;
   board.on("ready", function() {
-    var lumLED, tempLED;
     lumLED = new five.Led({ pin: lumPin });
     tempLED = new five.Led({ pin: temPin });
 
@@ -335,21 +343,21 @@ if(!process.argv[2] == 'test') {
      // lumLED.fadeIn();
      // tempLED.fadeIn();
 
+ });
 
-     board.temp = function(val) {
-      tempLED.brightness(val);
-      //lumLED.brightness(lum);
-     }
+ board.temp = function(val) {
+  tempLED.brightness(val);
+  //lumLED.brightness(lum);
+ }
 
-    board.lum = function(val) {
-        //tempLED.brightness(temp);
-        lumLED.brightness(val);
-       }
+board.lum = function(val) {
+    //tempLED.brightness(temp);
+      lumLED.brightness(val);
+   }
 
-  });
+
+
 }
-
-
 // Board.prototype.temp = function(val) {
 //   this.analogWrite(temPin, val);
 //  }
@@ -380,6 +388,8 @@ if(!process.argv[2] == 'test') {
 //   }, 30000)
 // }
 
+
+ // Run a check on startup for a connection, if none, create adhoc
  exec('sh ' + __dirname + '/../wireless.sh'
       , function (error, stdout, stderr) {
         if(error) console.log("Err: " + error + stderr);
