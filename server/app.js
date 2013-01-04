@@ -16,7 +16,7 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require(__dirname + '/../configLoad.js');
-  if(!process.argv[2] == 'test')
+  //if(!process.argv[2] == 'test')
     var five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
   if(!process.argv[2] == 'test')
@@ -395,5 +395,5 @@ if(!process.argv[2] == 'test') {
 
 
 
-app.listen(3001);
+app.listen(3000);
 console.log("THE OWL LIVES");
