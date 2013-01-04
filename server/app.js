@@ -17,17 +17,18 @@ var express = require('express')
   , exec = require('child_process').exec
   , config = require(__dirname + '/../configLoad.js');
   //if(process.argv[2] !== 'test')
-    var five = require("johnny-five")
+    //var five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
+
   if(process.argv[2] !== 'test') {
-    var board = new five.Board()
+    //var board = new five.Board()
+    var Board = require('firmata').Board;
     console.log("Loading Johnny 5")
     }
   else {
     var board = {};
   }
   //, serialport = require('serialport')
-  //, Board = require('firmata').Board;
   //, gpio = require('gpio');
   
 var writePath;  
@@ -329,6 +330,7 @@ var tempValue = function(val) {
 
 
 // board.mock = true;
+/*
 if(process.argv[2] !== 'test') {
   var lumLED, tempLED;
   board.on("ready", function() {
@@ -357,7 +359,9 @@ board.lum = function(val) {
 
 
 
-}
+}*/
+
+
 // Board.prototype.temp = function(val) {
 //   this.analogWrite(temPin, val);
 //  }
@@ -365,21 +369,38 @@ board.lum = function(val) {
 // Board.prototype.lum = function(val) {
 //   this.analogWrite(lumPin, val);
 //   }
+
 // tty.usbserial-A901C760
 //arduino = new Board('/dev/ttyUSB0', function(err) { // For Arduino Nano w/ 328 on RPI
-// arduino = new Board('/dev/tty.usbserial-A901C760', function(err) { // For Arduino Nano w/ 328 on OSX
-  
-//     console.log('connected ' + JSON.stringify(arduino));
+// Board = new Board('/dev/ttyACM0', function(err) { // For Arduino Nano w/ 328 on OSX
+
+var board = new Board('/dev/ttyACM0', function(err) {
+    console.log('connected');
     
 
-//     this.pinMode(lumPin, this.MODES.PWM);
-//     this.pinMode(temPin, this.MODES.PWM);
-//     this.pinMode(testPin, this.MODES.PWM)
+    board.pinMode(lumPin, board.MODES.PWM);
+    board.pinMode(temPin, board.MODES.PWM);
+    board.pinMode(testPin, board.MODES.PWM)
 
-//     console.trace("Setting board modes");
+    //setInterval(function(){
+      console.log("Setting lum" + lum + "and temp" + temp);
+      board.analogWrite(lumPin, lum);
+      board.analogWrite(temPin, temp);
+    //},100)
+});
+
+ board.temp = function(val) {
+  board.analogWrite(temPin, val);
+  //lumLED.brightness(lum);
+ }
+
+board.lum = function(val) {
+    //tempLED.brightness(temp);
+      board.analogWrite(lumPin, val);
+      
+   }
 
 
-// }).arduino;
 
  // Run a check on startup for a connection, if none, create adhoc
  exec('sh ' + __dirname + '/../wireless.sh'
