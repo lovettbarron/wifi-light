@@ -272,7 +272,7 @@ var saveToConfig = function() {
   // var content = JSON.parse(configFile);
 
 
-exec('sh ' + __dirname + '/../lockfilecheck.sh'
+exec('sh ' + __dirname + '/../lockfile.sh'
       , function (error, stdout, stderr) {
         if(error) console.log("Err: " + error + stderr);
         output = stdout.toString();
