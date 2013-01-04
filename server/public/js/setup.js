@@ -135,6 +135,7 @@ $(document).ready( function(){
 	$('a.submit').click( function(e){
 			e.preventDefault();
 			submit();
+			openDrawer(close);
 	});
 
 	$('a.lumOn').click( function(e){
