@@ -17,7 +17,7 @@
 	}
 	, "alarm": {
 		"time": 7
-		,"on": false
+		,"on": true
 	}
 	, "preset": [
 		{"name":"Office", "lum":127, "temp":0}

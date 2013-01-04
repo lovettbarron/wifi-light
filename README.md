@@ -54,3 +54,10 @@ http://askubuntu.com/questions/21343/how-to-make-sudo-remember-my-password-and-h
 Call `lockfilecheck`
 IF sys is in the middle of backing up temp config, abort write
 Check sys
+
+
+### Ram filesys
+Located at `/mnt/settings/owl'
+
+# Test
+GCe40eeC
