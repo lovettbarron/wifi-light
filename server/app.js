@@ -274,7 +274,7 @@ var checkMode = function() {
 var saveToConfig = function() {
   //  var configFile = fs.readFileSync('../ config.js');
   // var content = JSON.parse(configFile);
-  var lockPath = '/mnt/settings/owl/'
+  var lockPath = '/mnt/settings/'
 
   exec('sh ' + __dirname + '/../lockfile.sh'
       , function (error, stdout, stderr) {
@@ -340,8 +340,8 @@ if(process.argv[2] !== 'test') {
      //   , tempLED: tempLED
      // });
 
-      lumLED.fadeIn();
-      tempLED.fadeIn();
+     // lumLED.fadeIn();
+      //tempLED.fadeIn();
 
  });
 
@@ -380,14 +380,6 @@ board.lum = function(val) {
 
 
 // }).arduino;
-
-
-// var saveToDisk = function() {
-//   setInterval(function() {
-//     saveToConfig();
-//   }, 30000)
-// }
-
 
  // Run a check on startup for a connection, if none, create adhoc
  exec('sh ' + __dirname + '/../wireless.sh'
