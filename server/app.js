@@ -210,7 +210,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
   switch(type) {
     case 'wpa':
-          exec(__dirname + '/connect.sh wpa ' + ssid + ' ' + pass
+          exec(__dirname + '/connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -219,7 +219,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
       break;
 
     case 'wep':
-          exec(__dirname + '/connect.sh wep ' + ssid + ' ' + pass
+          exec(__dirname + '/connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -335,13 +335,13 @@ if(process.argv[2] !== 'test') {
     lumLED = new five.Led({ pin: lumPin });
     tempLED = new five.Led({ pin: temPin });
 
-     board.repl.inject({
-       lumLED: lumLED
-       , tempLED: tempLED
-     });
+     // board.repl.inject({
+     //   lumLED: lumLED
+     //   , tempLED: tempLED
+     // });
 
-     // lumLED.fadeIn();
-     // tempLED.fadeIn();
+      lumLED.fadeIn();
+      tempLED.fadeIn();
 
  });
 
