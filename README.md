@@ -1,6 +1,15 @@
 fishtnk-owl
 ===========
 
+
+### Run at 
+Start
+`/etc/init.d/fishtnk-owl start`
+
+Stop
+`/etc/init.d/fishtnk-owl stop`
+
+
 ## Install guide
 Occidentalis 0.2 from adafruit `http://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-2`
 
@@ -66,3 +75,6 @@ GCe40eeC
 
 sudo nano /etc/hostname
 http://zackeryfretty.com/assigning-a-local-domain-to-your-raspberry-pi-aka-stop-forgetting-your-ip-address/
+
+# Point AP to server
+sudo iptables -t nat -A PREROUTING -d 0/0 -p tcp –dport 80 -j DNAT –to 127.0.0.1:3000 

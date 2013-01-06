@@ -15,7 +15,7 @@ var express = require('express')
   , fs = require('fs')
   , sys = require('sys')
   , exec = require('child_process').exec
-  , config = require(__dirname + '/../configLoad.js') || ;
+  , config = require(__dirname + '/../configLoad.js') || {} ;
 
 
   console.log('Current config');
