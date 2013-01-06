@@ -61,3 +61,8 @@ Located at `/mnt/settings/owl'
 
 # Test
 GCe40eeC
+
+# Change .local address
+
+sudo nano /etc/hostname
+http://zackeryfretty.com/assigning-a-local-domain-to-your-raspberry-pi-aka-stop-forgetting-your-ip-address/

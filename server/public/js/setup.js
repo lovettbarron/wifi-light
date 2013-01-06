@@ -27,7 +27,7 @@ $(document).ready( function(){
 			$('.alarmTime').html( "Wakeup at " + data.alarm.time + ":00" );
 
 
-		if(status.setupMode)
+		if(status.network.ssid == '')
 			openDrawer(true);
 
 		$('#xypad').css({
@@ -103,7 +103,7 @@ $(document).ready( function(){
 		// 	'background-color' : getColor(temp,lum/255)
 		// });
 
-		var string = (lum * temp / 20).toFixed(2);
+		var string = (y * x / 20).toFixed(2);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
@@ -159,13 +159,14 @@ $(document).ready( function(){
 	});
 
 
+// Listens for server events
 setInterval(function(){
 	$.getJSON('/lightState', function(data) {
 		console.log(data);
 		lum = data.lum;
 		temp = data.temp;
 
-		var string = (lum * temp / 20).toFixed(2);
+		var string = ((lum/255) * (temp/255) / 20).toFixed(2);
 		$('.energy').html(string + " watts per hour")
 		
 	})
