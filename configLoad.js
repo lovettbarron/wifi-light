@@ -1,4 +1,5 @@
 var fs = require('fs');
-var config = fs.readFileSync(__dirname + '/config.js');
+var dir = '/mnt/setting/owl';
+var config = fs.readFileSync(dir + '/config.js');
 console.log(config.toString());
 module.exports = JSON.parse(config);

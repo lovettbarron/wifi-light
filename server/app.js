@@ -223,7 +223,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
   switch(type) {
     case 'wpa':
-          exec(__dirname + '/../connect.sh ' + ssid + ' ' + pass
+          exec('sh ' + __dirname + '/../connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -232,7 +232,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
       break;
 
     case 'wep':
-          exec(__dirname + '/../connect.sh ' + ssid + ' ' + pass
+          exec('sh ' + __dirname + '/../connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -395,7 +395,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
     board.pinMode(testPin, board.MODES.PWM)
 
     //setInterval(function(){
-      console.log("Setting lum" + lum + "and temp" + temp);
+      console.log("Setting lum " + lum + " and temp " + temp);
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
     //},100)
@@ -409,7 +409,6 @@ var board = new Board('/dev/ttyACM0', function(err) {
 board.lum = function(val) {
     //tempLED.brightness(temp);
       board.analogWrite(lumPin, val);
-      
    }
 
 
@@ -454,7 +453,7 @@ board.lum = function(val) {
         }
     });
 } else {
-  console.log("No viableconfig detected, starting adhoc");
+  console.log("No viable config detected, starting adhoc");
   broadcastMode();
 }
 
