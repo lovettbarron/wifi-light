@@ -440,19 +440,21 @@ board.lum = function(val) {
 
   if(connectToFlag == true) {
 
- // Run a check on startup for a connection, if none, create adhoc
-     exec('sh ' + __dirname + '/../wireless.sh'
-      , function (error, stdout, stderr) {
-        if(error) console.log("Err: " + error + stderr);
-        output = stdout.toString();
+    joinMode();
 
-        if(output = "0") {
-          console.log("No network detected, starting adhoc");
-          broadcastMode();
-        } else {
-          console.log("Connected to wireless")
-        }
-    });
+ // Run a check on startup for a connection, if none, create adhoc
+    //  exec('sh ' + __dirname + '/../wireless.sh'
+    //   , function (error, stdout, stderr) {
+    //     if(error) console.log("Err: " + error + stderr);
+    //     output = stdout.toString();
+
+    //     if(output = "0") {
+    //       console.log("No network detected, starting adhoc");
+    //       broadcastMode();
+    //     } else {
+    //       console.log("Connected to wireless")
+    //     }
+    // });
 } else {
   console.log("No viable config detected, starting adhoc");
   broadcastMode();
