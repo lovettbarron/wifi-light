@@ -174,6 +174,8 @@ app.post('/config/:type?/:ssid?/:pass?', function(req,res) {
   config.network.ssid = req.params.ssid;
   config.network.pass = req.params.pass;
 
+  console.log("Changing network")
+
   joinMode();
 
 }); 
