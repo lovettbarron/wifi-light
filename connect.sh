@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "$1 / $2 / $3"
+
 if [ "$1" = 'wpa' ]
 then
 	( echo update_config=1; 
