@@ -46,7 +46,8 @@ $(document).ready( function(){
 
 
 	});
-	
+
+
 		openDrawer(false);
 	
 
@@ -79,18 +80,22 @@ $(document).ready( function(){
 		// } else {
 		// 	active = true;
 		// }
-		if(x <= .5) { // Brightness
-			changeColor(0, y*255);
-			lum = y*255;
-			//temp = 0;
-		} else { // Temp
-			changeColor(y*255, y*255);
-			temp = y*255;
-			lum = y*255;
-		}
+		// if(x <= .5) { // Brightness
+		// 	changeColor(0, y*255);
+		// 	lum = y*255;
+		// 	//temp = 0;
+		// } else { // Temp
+		// 	changeColor(y*255, y*255);
+		// 	temp = y*255;
+		// 	lum = y*255;
+		// }
+
+		lum = y * 255;
+		temp = x * 255
 
 
-		//changeColor(temp, lum);
+
+		changeColor(temp, lum);
 
 
 
@@ -98,7 +103,7 @@ $(document).ready( function(){
 		// 	'background-color' : getColor(temp,lum/255)
 		// });
 
-		var string = (lum * temp / 100).toFixed(2);
+		var string = (lum * temp / 20).toFixed(2);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
@@ -153,6 +158,18 @@ $(document).ready( function(){
 			});
 	});
 
+
+setInterval(function(){
+	$.getJSON('/lightState', function(data) {
+		console.log(data);
+		lum = data.lum;
+		temp = data.temp;
+
+		var string = (lum * temp / 20).toFixed(2);
+		$('.energy').html(string + " watts per hour")
+		
+	})
+},500)
 });
 	
 function openDrawer(open) {

@@ -144,6 +144,10 @@ app.post('/ssid', function(req,res) {
 
 });
 
+app.get('/lightState', function(req,res) {
+  res.send({"temp":temp, "lum":lum});
+});
+
 app.get('/temp/:temp', function(req,res) {
   temp = req.params.temp;
   tempValue(temp);
@@ -420,15 +424,15 @@ board.lum = function(val) {
     ssid = stdout.toString();//.match('/"[^"]+"/');
     console.log(ssid);
     ssidArr = ssid.split("                    ESSID:");
-    console.log('ssidArr:' + ssidArr);
+    //console.log('ssidArr:' + ssidArr);
     for(i=1;i<ssidArr.length;i++) {
       ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
-      console.log("ID " + i-1 + ":" + ssidArr[i-1]);
+      //console.log("ID " + i-1 + ":" + ssidArr[i-1]);
 
-      if( ssidArr[i-1] == config.network.ssid)
+      if( ssidArr[i-1] == config.network.ssid) {
         connectToFlag = true;
-      console.log("Detected " + ssidArr[i-1] + " locally")
-
+        console.log("Detected " + ssidArr[i-1] + " locally")
+        }
     }
     ssidArr.pop();
   });
