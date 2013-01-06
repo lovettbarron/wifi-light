@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [$1 == 'wpa']
+if ["$1" = 'wpa']
 then
 ( 	echo update_config=1; 
 	echo ctrl_interface=/var/run/wpa_supplicant; 
@@ -13,7 +13,7 @@ then
 	dhclient wlan0
 
 	return 1
-else if [$1 == 'wep']
+else if ["$1" ='wep']
 then
 	ifconfig wlan0 up
 	iwconfig wlan0 essid $2 key $3
