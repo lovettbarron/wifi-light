@@ -134,6 +134,7 @@ $(document).ready( function(){
 	//Request account
 	$('a.submit').click( function(e){
 			e.preventDefault();
+			console.log("Submitting account")
 			submit();
 			openDrawer(close);
 	});
@@ -197,7 +198,7 @@ function submit() {
 	message.ssid = $('.ssid').val();
 	message.pass= $('.pass').val();
 
-	if(message.user == '' || message.email == '' || message.pass == '') {
+	if(message.pass == '') {
 		$('.error').show();
 	} else {
 
