@@ -11,7 +11,7 @@ then
 	) >> /etc/wpasupplicant/wpa_supplicant.conf
 	wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
 	dhclient wlan0
-	
+
 	return 1
 else if [$1 == 'wep']
 then
@@ -21,4 +21,5 @@ then
 	return 1
 else
 	return 0
+	fi
 fi
