@@ -15,7 +15,8 @@ var express = require('express')
   , fs = require('fs')
   , sys = require('sys')
   , exec = require('child_process').exec
-  , config = require(__dirname + '/../configLoad.js');
+  , config = require(__dirname + '/../configLoad.js') || ;
+
 
   console.log('Current config');
   console.log(config);
@@ -223,7 +224,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
   switch(type) {
     case 'wpa':
-          exec('sh ' + __dirname + '/../connect.sh ' + ssid + ' ' + pass
+          exec('sh ' + __dirname + '/../connect.sh wpa ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -232,7 +233,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
       break;
 
     case 'wep':
-          exec('sh ' + __dirname + '/../connect.sh ' + ssid + ' ' + pass
+          exec('sh ' + __dirname + '/../connect.sh wep ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -298,14 +299,14 @@ var saveToConfig = function() {
          console.log("Writing to ram disk")
            exec('touch ' + lockPath + 'update.flag'
           , function (error, stdout, stderr) {
-            
+            console.log("Lock file written");
             });
          fs.writeFile(writePath + configPath, JSON.stringify(config), function(err) {
           if (err) {
             console.log('There has been an error saving your configuration data.');
             console.log(err.message);
             } else {
-              console.log("File written!");
+              console.log("Config file written!");
             }
           });
         } else {
@@ -324,14 +325,14 @@ var lumValue = function(val) {
   if(process.argv[2] !== 'test')
     board.lum(val);
   //arduino.analogWrite(lumPin, val);
-  console.log("Setting lum value to " + lum)
+  console.log("Setting lum value to " + val)
 }
 
 var tempValue = function(val) {
   if(process.argv[2] !== 'test')
       board.temp(val);
   //arduino.analogWrite(temPin, val);
-  console.log("Setting temp value to " + temp)
+  console.log("Setting temp value to " + val)
 }
 
 
@@ -387,7 +388,7 @@ board.lum = function(val) {
 // Board = new Board('/dev/ttyACM0', function(err) { // For Arduino Nano w/ 328 on OSX
 
 var board = new Board('/dev/ttyACM0', function(err) {
-    console.log('connected');
+    console.log('Arduino connected');
     
 
     board.pinMode(lumPin, board.MODES.PWM);
