@@ -195,8 +195,8 @@ function submit() {
 	var message = {};
 	message.owner = $('.user').val();
 	message.email = $('.email').val();
-	message.ssid = $('input.ssid').val();
-	message.pass= $('input.pass').val();
+	message.ssid = $('.ssid select').val();
+	message.pass= $('.pass').val();
 
 	console.log(message.ssid + ' ' + message.pass);
 
