@@ -16,6 +16,10 @@ var express = require('express')
   , sys = require('sys')
   , exec = require('child_process').exec
   , config = require(__dirname + '/../configLoad.js');
+
+  console.log('Current config');
+  console.log(config);
+
   //if(process.argv[2] !== 'test')
     //var five = require("johnny-five")
     // or "./lib/johnny-five" when running from the source
@@ -190,7 +194,7 @@ var broadcastMode = function() {
 }
 
 var joinMode = function() {
-
+  console.log("Attempting to join network");
   changeNetwork(config.network.type, config.network.ssid, config.network.pass, function() {
 
     exec(__dirname + '../wireless.sh'
@@ -210,6 +214,8 @@ var joinMode = function() {
 var changeNetwork = function(type,ssid,pass,callback) {
   var network = '/etc/network.conf';
   var current, output, netConf;
+
+  console.log("Setting up network re: config file");
 
   switch(type) {
     case 'wpa':
