@@ -11,8 +11,8 @@ a {
 	position: relative;
 	z-index: 998;
 	top: 0; left: 0;
-	width: 1px;
-	height: 1px;
+	width: 42px;
+	height: 42px;
 	color: white;
 	text-align: center;
 }

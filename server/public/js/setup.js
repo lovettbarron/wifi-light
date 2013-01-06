@@ -27,14 +27,15 @@ $(document).ready( function(){
 			$('.alarmTime').html( "Wakeup at " + data.alarm.time + ":00" );
 
 
-		if(status.network.ssid == '')
+		if(status.network.ssid == '') {
 			openDrawer(true);
+		}
 
 		$('#xypad').css({
 			'background-color' : getColor(status.lamp.temp,status.lamp.lum/255)
 		});
 
-		var string = Math.round((lum + temp) / 100);
+		var string = Math.round(( (lum/255) + (temp/255) ) * 20);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
@@ -103,7 +104,7 @@ $(document).ready( function(){
 		// 	'background-color' : getColor(temp,lum/255)
 		// });
 
-		var string = (y * x / 20).toFixed(2);
+		var string = ( (y + x) * 20).toFixed(2);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
 				'left' : e.pageX-50
@@ -166,7 +167,7 @@ setInterval(function(){
 		lum = data.lum;
 		temp = data.temp;
 
-		var string = ((lum/255) * (temp/255) / 20).toFixed(2);
+		var string = (((lum/255) + (temp/255)) * 20).toFixed(2);
 		$('.energy').html(string + " watts per hour")
 		
 	})
@@ -188,6 +189,7 @@ function changeColor(temp, lum) {
 		$.getJSON('/temp/' + Math.round(temp), function(data) {
 				console.log(data);
 			});
+
 		$.getJSON('/lum/' + Math.round(lum), function(data) {
 					console.log(data);
 				});
