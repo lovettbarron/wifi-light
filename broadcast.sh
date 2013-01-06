@@ -41,23 +41,7 @@ echo "--------------------------------------"
 # debug
 iwconfig $mywlan
 
-while true; do
-echo -n "Enter 'q' to quit. "
-read value
-if [ "$value" == "q" ]; then
-break
-fi
-done
-
-echo -n "Killing DHCP server... "
-killall dnsmasq && echo "OK"
-echo -n "Killing wireless... "
-# restoring the wlan interface to "default" mode
-ifconfig $mywlan down
-iwconfig $mywlan mode managed
-iwconfig $mywlan essid off
-iwconfig $mywlan key off
-echo "OK"
-echo "Wireless Ad-hoc mode terminated."
-
-exit 0
+iptables -A FORWARD -i ath0 -o eth0 -s 10.0.0.0/24 -m state --state NEW -j ACCEPT
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A POSTROUTING -t nat -j MASQUERADE
+sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
