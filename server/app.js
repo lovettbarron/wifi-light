@@ -219,7 +219,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
   switch(type) {
     case 'wpa':
-          exec(__dirname + '../connect.sh ' + ssid + ' ' + pass
+          exec(__dirname + '/../connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -228,7 +228,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
       break;
 
     case 'wep':
-          exec(__dirname + '../connect.sh ' + ssid + ' ' + pass
+          exec(__dirname + '/../connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -410,8 +410,34 @@ board.lum = function(val) {
 
 
 
+// This stuff runs re: connection
+
+  var connectToFlag = false
+
+  exec('iwlist wlan0 scanning | grep ESSID'
+  , function (error, stdout, stderr) {
+    if(error) console.log("Err: " + error + stderr);
+    ssid = stdout.toString();//.match('/"[^"]+"/');
+    console.log(ssid);
+    ssidArr = ssid.split("                    ESSID:");
+    console.log('ssidArr:' + ssidArr);
+    for(i=1;i<ssidArr.length;i++) {
+      ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
+      console.log("ID " + i-1 + ":" + ssidArr[i-1]);
+
+      if( ssidArr[i-1] == config.network.ssid)
+        connectToFlag = true;
+      console.log("Detected " + ssidArr[i-1] + " locally")
+
+    }
+    ssidArr.pop();
+  });
+
+
+  if(connectToFlag == true) {
+
  // Run a check on startup for a connection, if none, create adhoc
- exec('sh ' + __dirname + '/../wireless.sh'
+     exec('sh ' + __dirname + '/../wireless.sh'
       , function (error, stdout, stderr) {
         if(error) console.log("Err: " + error + stderr);
         output = stdout.toString();
@@ -423,7 +449,10 @@ board.lum = function(val) {
           console.log("Connected to wireless")
         }
     });
-
+} else {
+  console.log("No viableconfig detected, starting adhoc");
+  broadcastMode();
+}
 
 
 app.listen(3000);
