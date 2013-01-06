@@ -23,7 +23,7 @@ var express = require('express')
   if(process.argv[2] !== 'test') {
     //var board = new five.Board()
     var Board = require('firmata').Board;
-    console.log("Loading Johnny 5")
+    console.log("Loading Firmata")
     }
   else {
     var board = {};
@@ -152,7 +152,7 @@ app.get('/lum/:lum', function(req,res) {
   res.send('okay!');
 });
 
-app.get('/alarm/:time', function(req,res) {
+app.get('/alarm/:time/:duration?', function(req,res) {
   alarm = req.params.time;
   alarmOn = true;
   config.alarm.time = alarm;
