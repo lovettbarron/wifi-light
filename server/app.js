@@ -219,7 +219,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
   switch(type) {
     case 'wpa':
-          exec(__dirname + '/connect.sh ' + ssid + ' ' + pass
+          exec(__dirname + '../connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
@@ -228,7 +228,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
       break;
 
     case 'wep':
-          exec(__dirname + '/connect.sh ' + ssid + ' ' + pass
+          exec(__dirname + '../connect.sh ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
           if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
