@@ -195,10 +195,13 @@ function submit() {
 	var message = {};
 	message.owner = $('.user').val();
 	message.email = $('.email').val();
-	message.ssid = $('.ssid').val();
-	message.pass= $('.pass').val();
+	message.ssid = $('input.ssid').val();
+	message.pass= $('input.pass').val();
+
+	console.log(message.ssid + ' ' + message.pass);
 
 	if(message.pass == '') {
+		console.log('no password')
 		$('.error').show();
 	} else {
 
