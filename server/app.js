@@ -145,7 +145,7 @@ app.post('/ssid', function(req,res) {
   config.owner.first = new Date();
 
   if(log) console.log(content)
-  
+
 });
 
 app.get('/lightState', function(req,res) {
@@ -443,6 +443,8 @@ board.lum = function(val) {
   broadcastMode();
 }
 
-
-app.listen(3000);
+if(process.platform == 'linux')
+  app.listen(80);
+else
+  app.listen(3000);
 if(log) console.log("THE OWL LIVES");

@@ -92,7 +92,7 @@ $(document).ready( function(){
 		// }
 
 		lum = y * 255;
-		temp = x * 255
+		temp = x * 255;
 
 
 
@@ -107,8 +107,8 @@ $(document).ready( function(){
 		var string = ( (y + x) * 20).toFixed(2);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
-				'left' : e.pageX-50
-				, 'top' : e.pageY-buffer*2
+				'left' : e.pageX;
+				, 'top' : e.pageY
 				, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
 			})
 			$('.energy').html(string + " watts per hour")
