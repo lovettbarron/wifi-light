@@ -413,7 +413,7 @@ board.lum = function(val) {
 
 // This stuff runs re: connection
 
-  var connectToFlag = false;
+ /* var connectToFlag = false;
 
   exec('iwlist wlan0 scanning | grep ESSID'
   , function (error, stdout, stderr) {
@@ -441,7 +441,9 @@ board.lum = function(val) {
 } else {
   if(log) console.log("No viable config detected, starting adhoc");
   broadcastMode();
-}
+} */
+
+joinMode();
 
 if(process.platform == 'linux')
   app.listen(80);

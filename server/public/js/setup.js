@@ -106,12 +106,12 @@ $(document).ready( function(){
 		// });
 
 		var string = ( (y + x) * 20).toFixed(2);
-		if(e.pageY > buffer + 40) {
+			if(e.pageY > buffer + 40) {
 			$('#lens').css( {
-				'left' : e.pageX-30
-				, 'top' : e.pageY-35
-				, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
-			})
+				'left' : e.pageX-50
+				, 'top' : e.pageY-buffer*2
+				//, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
+			});
 			$('.energy').html(string + " watts per hour")
 		}
 
