@@ -16,7 +16,8 @@ mydhcprange="192.168.7.101,192.168.7.110"
 # Main program
 echo -n "Stopping wireless connections (if any)... "
 # adapt to your system; I use wicd
-systemctl stop wicd && echo "OK"
+systemctl stop wicd && echo "systemctl wtop wicd"
+iwconfig wlan0 down && echo "wlan0 down"
 # for networkmanager
 #systemctl stop NetworkManager
 
