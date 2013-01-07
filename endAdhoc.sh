@@ -3,7 +3,8 @@
 # Kill wifi
 
 echo -n "Killing DHCP server... "
-killall dnsmasq && echo "OK"
+#killall dnsmasq && echo "OK"
+/etc/init.d/dnsmasq stop && echo "dnsmasq service stop"
 echo -n "Killing wireless... "
 # restoring the wlan interface to "default" mode
 ifconfig wlan0 down

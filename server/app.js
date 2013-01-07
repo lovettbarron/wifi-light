@@ -145,7 +145,7 @@ app.post('/ssid', function(req,res) {
   config.owner.first = new Date();
 
   if(log) console.log(content)
-
+  
 });
 
 app.get('/lightState', function(req,res) {

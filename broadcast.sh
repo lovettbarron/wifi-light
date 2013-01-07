@@ -31,7 +31,7 @@ iwconfig $mywlan channel $mychan
 ifconfig $mywlan $myip
 ifconfig $mywlan up && echo "OK"
 echo -n "Starting DHCP server ... "
-dnsmasq --dhcp-range="$mydhcprange" && echo "OK"
+/etc/init.d/dnsmasq && echo "dnsmasq started"
 
 echo "--------------------------------------"
 echo "ESSID : $myessid"
