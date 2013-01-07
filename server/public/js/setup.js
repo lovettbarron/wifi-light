@@ -107,8 +107,8 @@ $(document).ready( function(){
 		var string = ( (y + x) * 20).toFixed(2);
 		if(e.pageY > buffer + 40) {
 			$('#lens').css( {
-				'left' : e.pageX;
-				, 'top' : e.pageY
+				'left' : e.pageX-30
+				, 'top' : e.pageY-35
 				, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
 			})
 			$('.energy').html(string + " watts per hour")
