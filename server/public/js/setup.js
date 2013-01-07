@@ -225,7 +225,7 @@ function submit() {
 		$('.error').show();
 	} else {
 
-	$.post('/config/' + 'wep' + '/' + message.ssid + '/' + message.pass, message, function(data, err) {
+	$.post('/config/' + 'wpa' + '/' + message.ssid + '/' + message.pass, message, function(data, err) {
 		if(err) console.log('err:' + err)
 		console.log('Successful:' + data);
 		});
