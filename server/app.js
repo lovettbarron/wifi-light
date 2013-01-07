@@ -413,7 +413,7 @@ board.lum = function(val) {
 
 // This stuff runs re: connection
 
-  var connectToFlag = false
+  var connectToFlag = false;
 
   exec('iwlist wlan0 scanning | grep ESSID'
   , function (error, stdout, stderr) {
@@ -435,8 +435,8 @@ board.lum = function(val) {
   });
 
 
-  if(connectToFlag == true) {
-    if(log) console.log("Joining network");
+  if(connectToFlag) {
+    if(log) console.log("Joining network " + config.network.ssid);
     joinMode();
 } else {
   if(log) console.log("No viable config detected, starting adhoc");
