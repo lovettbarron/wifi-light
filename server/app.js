@@ -7,6 +7,9 @@
 * http://github.com/relaystudio/fishtnk-owl
 ***********************/
 
+var log = false;
+if(process.argv[2] == 'log' || process.argv[2] == 'test')
+  log = true;
 var configPath = 'config.js';
 
 var express = require('express')
@@ -18,8 +21,8 @@ var express = require('express')
   , config = require(__dirname + '/../configLoad.js') || {} ;
 
 
-  console.log('Current config');
-  console.log(config);
+  if(log) console.log('Current config');
+  if(log) console.log(config);
 
   //if(process.argv[2] !== 'test')
     //var five = require("johnny-five")
@@ -28,7 +31,7 @@ var express = require('express')
   if(process.argv[2] !== 'test') {
     //var board = new five.Board()
     var Board = require('firmata').Board;
-    console.log("Loading Firmata")
+    if(log) console.log("Loading Firmata")
     }
   else {
     var board = {};
@@ -98,7 +101,7 @@ app.get('/new', function(req, res){
 
 // Gets status
 app.get('/status', function(req,res) {
-  console.log('Sending config status' + config)
+  if(log) console.log('Sending config status' + config)
   res.send(config);
 });
 
@@ -109,20 +112,20 @@ app.get('/ssid', function(req,res) {
 
   exec('iwlist wlan0 scanning | grep ESSID'
   , function (error, stdout, stderr) {
-    if(error) console.log("Err: " + error + stderr);
+    if(error) if(log) console.log("Err: " + error + stderr);
     ssid = stdout.toString();//.match('/"[^"]+"/');
-    console.log(ssid);
+    if(log) console.log(ssid);
     ssidArr = ssid.split("                    ESSID:");
-    console.log('ssidArr:' + ssidArr);
+    if(log) console.log('ssidArr:' + ssidArr);
     for(i=1;i<ssidArr.length;i++) {
       ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
-      console.log("ID " + i-1 + ":" + ssidArr[i-1]);
+      if(log) console.log("ID " + i-1 + ":" + ssidArr[i-1]);
     }
     ssidArr.pop();
     res.send(ssidArr);
   });
   
-  console.log(JSON.stringify(ssidArr));
+  if(log) console.log(JSON.stringify(ssidArr));
   //TEST
   //ssidArr = ['Lurgan Beach', 'duffer', 'ROGERS8195',''];
 });
@@ -131,7 +134,7 @@ app.get('/ssid', function(req,res) {
 // Modifies SSIDs
 app.post('/ssid', function(req,res) {
   var conf = {}
-  console.log("Changing wlan: " + conf);
+  if(log) console.log("Changing wlan: " + conf);
 
   var configFile = fs.readFile(configPath);
   var content = JSON.parse(configFile);
@@ -141,7 +144,7 @@ app.post('/ssid', function(req,res) {
   config.owner.email = req.body.email;
   config.owner.first = new Date();
 
-  console.log(content)
+  if(log) console.log(content)
 
 });
 
@@ -183,7 +186,7 @@ app.post('/config/:type?/:ssid?/:pass?', function(req,res) {
   config.network.ssid = req.params.ssid;
   config.network.pass = req.params.pass;
 
-  console.log("Changing network")
+  if(log) console.log("Changing network")
 
   joinMode();
 
@@ -199,7 +202,7 @@ var broadcastMode = function() {
 }
 
 var joinMode = function() {
-  console.log("Attempting to join network");
+  if(log) console.log("Attempting to join network");
   changeNetwork(config.network.type, config.network.ssid, config.network.pass);
 };
 
@@ -207,31 +210,31 @@ var changeNetwork = function(type,ssid,pass,callback) {
   var network = '/etc/network.conf';
   var current, output, netConf;
 
-  console.log("Setting up network re: config file");
+  if(log) console.log("Setting up network re: config file");
 
   exec('sh ' + __dirname + '/../endAdhoc.sh'
   , function (error, stdout, stderr) {
-    if(error) console.log("Err: " + error + stderr);
+    if(error) if(log) console.log("Err: " + error + stderr);
     output = stdout.toString();
-    console.log(output);
+    if(log) console.log(output);
   });
 
   switch(type) {
     case 'wpa':
           exec('sh ' + __dirname + '/../connect.sh wpa ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
-          if(error) console.log("Err: " + error + stderr);
+          if(error) if(log) console.log("Err: " + error + stderr);
           output = stdout.toString();
-          console.log(output);
+          if(log) console.log(output);
         });
       break;
 
     case 'wep':
           exec('sh ' + __dirname + '/../connect.sh wep ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
-          if(error) console.log("Err: " + error + stderr);
+          if(error) if(log) console.log("Err: " + error + stderr);
           output = stdout.toString();
-          console.log(output);
+          if(log) console.log(output);
         });
       break;
 
@@ -239,9 +242,9 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
       exec('sh ' + __dirname + '/../broadcast.sh'
         , function (error, stdout, stderr) {
-          if(error) console.log("Err: " + error + stderr);
+          if(error) if(log) console.log("Err: " + error + stderr);
           output = stdout.toString();
-          console.log(output);
+          if(log) console.log(output);
         });
       break;
 
@@ -260,8 +263,8 @@ var reset = function() {
   var content = JSON.parse(configFile);
     fs.writeFile(configPath, JSON.stringify(content), function(err) {
     if (err) {
-      console.log('There has been an error saving your configuration data.');
-      console.log(err.message);
+      if(log) console.log('There has been an error saving your configuration data.');
+      if(log) console.log(err.message);
       return;
       }
     });
@@ -286,25 +289,25 @@ var saveToConfig = function() {
 
   exec('sh ' + __dirname + '/../lockfile.sh'
       , function (error, stdout, stderr) {
-        if(error) console.log("Err: " + error + stderr);
+        if(error) if(log) console.log("Err: " + error + stderr);
         output = stdout.toString();
 
         if(output = "0") {
-         console.log("Writing to ram disk")
+         if(log) console.log("Writing to ram disk")
            exec('touch ' + lockPath + 'update.flag'
           , function (error, stdout, stderr) {
-            console.log("Lock file written");
+            if(log) console.log("Lock file written");
             });
          fs.writeFile(writePath + configPath, JSON.stringify(config), function(err) {
           if (err) {
-            console.log('There has been an error saving your configuration data.');
-            console.log(err.message);
+            if(log) console.log('There has been an error saving your configuration data.');
+            if(log) console.log(err.message);
             } else {
-              console.log("Config file written!");
+              if(log) console.log("Config file written!");
             }
           });
         } else {
-          console.log("The ram disk is currently locked, saving to storage")
+          if(log) console.log("The ram disk is currently locked, saving to storage")
         }
     });
 
@@ -319,14 +322,14 @@ var lumValue = function(val) {
   if(process.argv[2] !== 'test')
     board.lum(val);
   //arduino.analogWrite(lumPin, val);
-  console.log("Setting lum value to " + val)
+  if(log) console.log("Setting lum value to " + val)
 }
 
 var tempValue = function(val) {
   if(process.argv[2] !== 'test')
       board.temp(val);
   //arduino.analogWrite(temPin, val);
-  console.log("Setting temp value to " + val)
+  if(log) console.log("Setting temp value to " + val)
 }
 
 
@@ -382,7 +385,7 @@ board.lum = function(val) {
 // Board = new Board('/dev/ttyACM0', function(err) { // For Arduino Nano w/ 328 on OSX
 
 var board = new Board('/dev/ttyACM0', function(err) {
-    console.log('Arduino connected');
+    if(log) console.log('Arduino connected');
     
 
     board.pinMode(lumPin, board.MODES.PWM);
@@ -390,7 +393,7 @@ var board = new Board('/dev/ttyACM0', function(err) {
     board.pinMode(testPin, board.MODES.PWM)
 
     //setInterval(function(){
-      console.log("Setting lum " + lum + " and temp " + temp);
+      if(log) console.log("Setting lum " + lum + " and temp " + temp);
       board.analogWrite(lumPin, lum);
       board.analogWrite(temPin, temp);
     //},100)
@@ -414,18 +417,18 @@ board.lum = function(val) {
 
   exec('iwlist wlan0 scanning | grep ESSID'
   , function (error, stdout, stderr) {
-    if(error) console.log("Err: " + error + stderr);
+    if(error) if(log) console.log("Err: " + error + stderr);
     ssid = stdout.toString();//.match('/"[^"]+"/');
-    console.log(ssid);
+    if(log) console.log(ssid);
     ssidArr = ssid.split("                    ESSID:");
-    //console.log('ssidArr:' + ssidArr);
+    //if(log) console.log('ssidArr:' + ssidArr);
     for(i=1;i<ssidArr.length;i++) {
       ssidArr[i-1] = ssidArr[i].match('\"(.*?)\"')[1];
-      //console.log("ID " + i-1 + ":" + ssidArr[i-1]);
+      //if(log) console.log("ID " + i-1 + ":" + ssidArr[i-1]);
 
       if( ssidArr[i-1] == config.network.ssid) {
         connectToFlag = true;
-        console.log("Detected " + ssidArr[i-1] + " locally")
+        if(log) console.log("Detected " + ssidArr[i-1] + " locally")
         }
     }
     ssidArr.pop();
@@ -433,27 +436,13 @@ board.lum = function(val) {
 
 
   if(connectToFlag == true) {
-
+    if(log) console.log("Joining network");
     joinMode();
-
- // Run a check on startup for a connection, if none, create adhoc
-    //  exec('sh ' + __dirname + '/../wireless.sh'
-    //   , function (error, stdout, stderr) {
-    //     if(error) console.log("Err: " + error + stderr);
-    //     output = stdout.toString();
-
-    //     if(output = "0") {
-    //       console.log("No network detected, starting adhoc");
-    //       broadcastMode();
-    //     } else {
-    //       console.log("Connected to wireless")
-    //     }
-    // });
 } else {
-  console.log("No viable config detected, starting adhoc");
+  if(log) console.log("No viable config detected, starting adhoc");
   broadcastMode();
 }
 
 
 app.listen(3000);
-console.log("THE OWL LIVES");
+if(log) console.log("THE OWL LIVES");
