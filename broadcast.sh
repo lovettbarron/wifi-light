@@ -31,7 +31,7 @@ iwconfig $mywlan channel $mychan
 ifconfig $mywlan $myip
 ifconfig $mywlan up && echo "OK"
 echo -n "Starting DHCP server ... "
-/etc/init.d/dnsmasq start && echo "dnsmasq started"
+/etc/init.d/dnsmasq restart && echo "dnsmasq started"
 echo "nameserver 127.0.0.1" > /etc/resolv.conf
 
 echo "--------------------------------------"
