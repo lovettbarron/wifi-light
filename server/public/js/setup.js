@@ -72,8 +72,8 @@ $(document).ready( function(){
 		// else var lum = 0;
 		// var temp =  Math.floor(255 * ( e.pageX / $(window).innerWidth()));
 
-		var x = 1 - (e.pageX / $(window).innerWidth());
-		var y = e.pageY / $(window).innerHeight();
+		var x = 1 - (e.pageX / $('#xypad').innerWidth());
+		var y = 1- (e.pageY / $('#xypad').innerHeight());
 
 
 		// if(lum < 0) {
