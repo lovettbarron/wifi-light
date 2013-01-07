@@ -200,21 +200,8 @@ var broadcastMode = function() {
 
 var joinMode = function() {
   console.log("Attempting to join network");
-  changeNetwork(config.network.type, config.network.ssid, config.network.pass, function() {
-
-    // exec(__dirname + '../wireless.sh'
-    //   , function (error, stdout, stderr) {
-    //     if(error) console.log("Err: " + error + stderr);
-    //     output = stdout.toString();
-
-    //     if(output = "0")
-    //       broadcastMode();
-    //     else
-    //       console.log("Successfully connected")
-    // });
-
-  }); 
-}
+  changeNetwork(config.network.type, config.network.ssid, config.network.pass);
+};
 
 var changeNetwork = function(type,ssid,pass,callback) {
   var network = '/etc/network.conf';
