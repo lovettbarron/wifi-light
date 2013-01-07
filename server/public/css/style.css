@@ -1,11 +1,13 @@
 body {
-	
+	overflow-y: hidden;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
 }
+
+html,body { height:100%; }
 
 #lens {
 	position: relative;
@@ -82,20 +84,6 @@ background-image: -webkit-gradient(
 	color-stop(0.91, rgb(255,234,0))
 );
 
-
-/*
-	background: -webkit-gradient(linear, left top, right top, from(transparent), 
-		to(#2F2727));*/
-	
-
-	/*
-	background: -webkit-gradient(linear, left top, right top, from(#2F2727), 
-		color-stop(0.05, white), color-stop(0.5, transparent), color-stop(0.95, #1a82f7), to(#2F2727));
-	background: -webkit-linear-gradient(left, #2F2727, transparent 5%, transparent, yellow 95%, #2F2727);
-	background: -moz-linear-gradient(left, #2F2727, #1a82f7 5%, transparent, #1a82f7 95%, #2F2727);
-	background: -ms-linear-gradient(left, #2F2727, #1a82f7 5%, transparent, #1a82f7 95%, #2F2727);
-	background: -o-linear-gradient(left, #2F2727, #1a82f7 5%, transparent, #wh 95%, #2F2727);
-		*/
 }
 
 #xypad img {

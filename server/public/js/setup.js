@@ -5,6 +5,7 @@ var status = {};
 
 $(document).ready( function(){
 	init();
+	$('#xypad').css( 'height', $(window).height()-50 );
 	$('.dropdown-toggle').dropdown();
 	$('ul#settings').find('li:first').addClass('active');
 	$('.collapse-toggle').collapse();
@@ -40,7 +41,7 @@ $(document).ready( function(){
 			$('#lens').css( {
 				'left' : e.pageX-50
 				, 'top' : e.pageY-buffer*2
-				, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
+				//, 'background-image': 'radial-gradient(center center, 60px 70px, rgba(0,0,0,.1), rgba(0,0,0,.6));'
 			});//.html(string);
 		$('.energy').html(string + " watts per hour")
 		}
