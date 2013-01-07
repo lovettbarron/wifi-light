@@ -222,6 +222,13 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
   console.log("Setting up network re: config file");
 
+  exec('sh ' + __dirname + '/../endAdhoc.sh'
+  , function (error, stdout, stderr) {
+    if(error) console.log("Err: " + error + stderr);
+    output = stdout.toString();
+    console.log(output);
+  });
+
   switch(type) {
     case 'wpa':
           exec('sh ' + __dirname + '/../connect.sh wpa ' + ssid + ' ' + pass
