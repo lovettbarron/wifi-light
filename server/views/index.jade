@@ -11,54 +11,22 @@ block index
 			#lens
 				img(src='img/cursor.png')
 		#drawer.well
-			h3 Owl Smart Settings
-			ul#settings.nav.tabs.nav-tabs(data-tabs="tabs")
-				li.active
-					a.active(href='#intro',data-toggle="tab") Intro
-				li
-					a(href='#register',data-toggle="tab") Register
-				li
-					a(href='#wireless',data-toggle="tab") Network
-
-			.tab-content
-				.well.tab-pane.active#intro
-					h3 The Owl
-					ul
-						li Welcome to the Fishtnk Owl, the future of designed lighting systems.
-					//a.btn Facebook
-					//a.btn Twitter
-
-					h3 Set an Alarm
-					form.dropdown.alarmClock
-						select
-							- for (var i=1;i<24;++i) {
-								option(id=i)= i
-							-}
-					a.btn.setAlarm Set Alarm
-
-				.well.tab-pane#register
-					h3 Settings
-					form.form
-						h3 Register your owl for premius service and upgrades!
-						input.text(type='text',placeholder='Name')
-						input.text(type='text',placeholder='Email')
-						a.btn.drawer Register
-
-				.well.tab-pane#wireless
-					h3 Connect owl to wireless network
-					form.form
-						select.dropdown.ssid(type='dropdown',placeholder='Your ssid')
-							option Proto ssid
-						input.text.pass(type='password',placeholder='wireless password')
-						a.btn.submit Save and restart Owl
-					.clearfix
-						a.btn.pull-right.drawer Close
+			.clearfix
+				a.btn.pull-right.drawer x
+			img.stretch(src='img/smartlight.png')
+			form.form
+				h3 Connect owl to wireless network
+				select.dropdown.ssid(type='dropdown',placeholder='Your ssid')
+					option Proto ssid
+				input.text.pass(type='password',placeholder='wireless password')
+				a.btn.submit Connect
 	
 
-	.nav.nav-bar.navbar-fixed-bottom
+	.navbar.navbar-fixed-bottom
 		.navbar-inner
 			.container.drawer
-				a.btn.pull-right Settings
+				a.btn.btn-inverse.pull-right 
+					img.settingsBtn(src="/img/setting.png")
 				.energy
 				ul.navbar.presets
 					
