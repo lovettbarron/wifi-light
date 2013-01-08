@@ -112,7 +112,7 @@ app.get('/ssid', function(req,res) {
 
   exec('iwlist wlan0 scanning | grep ESSID'
   , function (error, stdout, stderr) {
-    if(error) if(log) console.log("Err: " + error + stderr);
+    if(error) console.log("Err: " + error + stderr);
     ssid = stdout.toString();//.match('/"[^"]+"/');
     if(log) console.log(ssid);
     ssidArr = ssid.split("                    ESSID:");
@@ -214,7 +214,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
   exec('sh ' + __dirname + '/../endAdhoc.sh'
   , function (error, stdout, stderr) {
-    if(error) if(log) console.log("Err: " + error + stderr);
+    if(error) console.log("Err: " + error + stderr);
     output = stdout.toString();
     if(log) console.log(output);
   });
@@ -223,7 +223,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
     case 'wpa':
           exec('sh ' + __dirname + '/../connect.sh wpa ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
-          if(error) if(log) console.log("Err: " + error + stderr);
+          if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
           if(log) console.log(output);
         });
@@ -232,7 +232,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
     case 'wep':
           exec('sh ' + __dirname + '/../connect.sh wep ' + ssid + ' ' + pass
         , function (error, stdout, stderr) {
-          if(error) if(log) console.log("Err: " + error + stderr);
+          if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
           if(log) console.log(output);
         });
@@ -242,7 +242,7 @@ var changeNetwork = function(type,ssid,pass,callback) {
 
       exec('sh ' + __dirname + '/../broadcast.sh'
         , function (error, stdout, stderr) {
-          if(error) if(log) console.log("Err: " + error + stderr);
+          if(error) console.log("Err: " + error + stderr);
           output = stdout.toString();
           if(log) console.log(output);
         });
@@ -289,7 +289,7 @@ var saveToConfig = function() {
 
   exec('sh ' + __dirname + '/../lockfile.sh'
       , function (error, stdout, stderr) {
-        if(error) if(log) console.log("Err: " + error + stderr);
+        if(error) console.log("Err: " + error + stderr);
         output = stdout.toString();
 
         if(output = "0") {
@@ -449,4 +449,4 @@ if(process.platform == 'linux')
   app.listen(80);
 else
   app.listen(3000);
-if(log) console.log("THE OWL LIVES");
+console.log("THE OWL LIVES");
